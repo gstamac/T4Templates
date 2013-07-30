@@ -71,7 +71,7 @@ Other properties of *DataTestMethod* attribute are:
 * WorkItem
 
 They translate to *MsTest* attributes. You can also use original attributes and they will be added to all generated 
-tests. The attributes will still be overwriten with properties of *DataTestMethod* attribute. 
+tests. The attributes will still be overwritten with properties of *DataTestMethod* attribute. 
 Description attribute will be formatted using test parameters and result.
 
     [DataTestMethod("10", Result = 10, Priority = 3)]
