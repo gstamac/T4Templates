@@ -10,9 +10,9 @@
 	{
 		FileCodeModel codeModel = GetCodeModel(Session["InputFileName"] as string);
 
-		WriteLine("/*");
+		//WriteLine("/*");
 		//DumpElements(codeModel.CodeElements);
-		WriteLine("*/");
+		//WriteLine("*/");
 
 		OutputUsings();
 
@@ -253,7 +253,7 @@
 			if (Parameters.TryGetValue("TestName", out testName) && !String.IsNullOrEmpty(testName))
 				return testName.Trim('"');
 
-			string testMethodName = DataTestMethodName + "_" + TestParameters.Replace("\"", "").Replace(",", "_").Replace(" ", "");
+			string testMethodName = DataTestMethodName + "_" + TestParameters.Replace("\"", "").Replace(".", "_").Replace(",", "_").Replace(" ", "").Replace("@", "");
 			string result;
 			if (Parameters.TryGetValue("Result", out result) && !String.IsNullOrEmpty(result))
 				testMethodName += "_" + result;
