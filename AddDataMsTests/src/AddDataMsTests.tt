@@ -170,6 +170,8 @@
 				TestParameters += ", " + param;
 		}
 
+		const string DESCRIPTION_ATTRIBUTE = "Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute";
+
 		public IEnumerable<string> GetTestAttributes()
 		{
 			List<string> ignoreAttributes = new List<string>();
@@ -205,12 +207,13 @@
 			}
 
 			CodeAttribute descriptionAttribute;
-			if (_ParentAttributes.TryGetValue("Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute", out descriptionAttribute) && descriptionAttribute != null)
+			if (!ignoreAttributes.Contains(DESCRIPTION_ATTRIBUTE)
+				&& _ParentAttributes.TryGetValue(DESCRIPTION_ATTRIBUTE, out descriptionAttribute) && descriptionAttribute != null)
 			{
 				try
 				{
 					param = descriptionAttribute.Value;
-					ignoreAttributes.Add("Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute");
+					ignoreAttributes.Add(DESCRIPTION_ATTRIBUTE);
 					if (param.Contains("{"))
 						param = FormatDescription(param);
 				}
@@ -225,6 +228,11 @@
 			{
 				if (!ignoreAttributes.Contains(parentAttr.Key))
 					yield return parentAttr.Value.Name + "(" + parentAttr.Value.Value + ")";
+			}
+
+			if (!ignoreAttributes.Contains(DESCRIPTION_ATTRIBUTE))
+			{
+				yield return "Description(" + GetTestDescription() + ")";
 			}
 		}
 
@@ -247,7 +255,7 @@
             return ToLiteral(method.Invoke(null, null) as string);
         }
 
-        private static string ToLiteral(string input)
+        private string ToLiteral(string input)
         {
             using (var writer = new System.IO.StringWriter())
             {
@@ -265,10 +273,14 @@
 			if (Parameters.TryGetValue("TestName", out testName) && !String.IsNullOrEmpty(testName))
 				return testName.Trim('"');
 
-			string testMethodName = DataTestMethodName + "_" + TestParameters.Replace("\"", "").Replace(".", "_").Replace(",", "_").Replace(" ", "").Replace("@", "");
+			string testMethodName = DataTestMethodName + "_" + TestParameters;
 			string result;
 			if (Parameters.TryGetValue("Result", out result) && !String.IsNullOrEmpty(result))
-				testMethodName += "_" + result;
+				testMethodName += ", " + result;
+
+			System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(@"[^\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Nl}\p{Mn}\p{Mc}\p{Cf}\p{Pc}\p{Lm}]");
+			testMethodName = regex.Replace(testMethodName, "_");
+
 			return testMethodName;
 		}
 
@@ -286,6 +298,18 @@
 			}
 
 			return testContents + ";";
+		}
+
+		public string GetTestDescription()
+		{
+			string testDescription = DataTestMethodName + "(" + TestParameters + ")";
+			string result;
+			if (Parameters.TryGetValue("Result", out result) && !String.IsNullOrEmpty(result))
+			{
+				testDescription += " == " + result;
+			}
+
+			return ToLiteral(testDescription);
 		}
 	}
 
