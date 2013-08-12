@@ -212,7 +212,7 @@
 					param = descriptionAttribute.Value;
 					ignoreAttributes.Add("Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute");
 					if (param.Contains("{"))
-						param = "\"" + FormatDescription(param) + "\"";
+						param = FormatDescription(param);
 				}
 				catch (Exception e)
 				{ 
@@ -244,7 +244,19 @@
             string fileContents = @"using System; namespace tmp { public static class tmpClass { public static string GetValue() { return " + formatString + " } } }";
             var results = codeProvider.CompileAssemblyFromSource(compilerParameters, fileContents);
             var method = results.CompiledAssembly.GetType("tmp.tmpClass").GetMethod("GetValue");
-            return method.Invoke(null, null) as string;
+            return ToLiteral(method.Invoke(null, null) as string);
+        }
+
+        private static string ToLiteral(string input)
+        {
+            using (var writer = new System.IO.StringWriter())
+            {
+                using (var provider = new Microsoft.CSharp.CSharpCodeProvider())
+                {
+                    provider.GenerateCodeFromExpression(new System.CodeDom.CodePrimitiveExpression(input), writer, null);
+                    return writer.ToString();
+                }
+            }
         }
 
 		public string GetTestMethodName()
