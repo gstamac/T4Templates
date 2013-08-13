@@ -23,6 +23,7 @@
 		WriteLine("namespace " + DataTestMethodAttributeNamespace);
 		WriteLine("{");
 		PushIndent("\t");
+		
 		WriteLine("[AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]");
 		WriteLine("internal class " + DataTestMethodAttributeName + " : Attribute");
 		WriteLine("{");
@@ -53,6 +54,24 @@
         WriteLine("public int WorkItem { get; set; }");
 		PopIndent();
         WriteLine("}");
+        
+		WriteLine("");
+		WriteLine("[AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]");
+		WriteLine("internal class " + DataRowAttributeName + " : Attribute");
+		WriteLine("{");
+		PushIndent("\t");
+		WriteLine("public " + DataRowAttributeName + "(params object[] args)");
+        WriteLine("{");
+		PushIndent("\t");
+		WriteLine("Arguments = args;");
+		PopIndent();
+        WriteLine("}");
+
+        WriteLine("public object[] Arguments { get; private set; }");
+        WriteLine("public string DisplayName { get; set; }");
+		PopIndent();
+        WriteLine("}");
+
 		PopIndent();
         WriteLine("}");
 	}
@@ -60,7 +79,9 @@
 <#+
 	const string DataTestMethodAttributeNamespace = "TemplateAttributes";
 	const string DataTestMethodAttributeName = "DataTestMethodAttribute";
+	const string DataRowAttributeName = "DataRowAttribute";
 	const string DataTestMethodAttributeFullName = DataTestMethodAttributeNamespace + "." + DataTestMethodAttributeName;
+	const string DataRowAttributeFullName = DataTestMethodAttributeNamespace + "." + DataRowAttributeName;
 
 	private void OutputUsings() 
 	{
@@ -192,6 +213,12 @@
 					ignoreAttributes.Add("Microsoft.VisualStudio.TestTools.UnitTesting." + propName + "Attribute");
 					yield return propName + "(" + param + ")";
 				}
+			}
+
+			if (Parameters.TryGetValue("DisplayName", out param) && !String.IsNullOrEmpty(param))
+			{
+				ignoreAttributes.Add(DESCRIPTION_ATTRIBUTE);
+				yield return "Description(" + param + ")";
 			}
 
 			if (Parameters.TryGetValue("ExpectedException", out param) && !String.IsNullOrEmpty(param))
@@ -337,6 +364,7 @@
 			if (codeFunction != null)
 			{
 				List<CodeAttribute> dataTestAttributes = new List<CodeAttribute>();
+				List<CodeAttribute> dataRowAttributes = new List<CodeAttribute>();
 				Dictionary<string, CodeAttribute> parentAttributes = new Dictionary<string, CodeAttribute>();
 				foreach (CodeAttribute codeAttribute in codeFunction.Attributes)
 				{
@@ -344,27 +372,104 @@
 					{
 						dataTestAttributes.Add(codeAttribute);
 					}
+					else if (codeAttribute.FullName == DataRowAttributeFullName) 
+					{
+						dataRowAttributes.Add(codeAttribute);
+					}
 					else
 					{
 						parentAttributes.Add(codeAttribute.FullName, codeAttribute);
 					}
 				}
-				foreach (CodeAttribute codeAttribute in dataTestAttributes)
+				if (dataRowAttributes.Count > 0 && dataTestAttributes.Count == 1)
 				{
-					WriteLine("// " + codeAttribute.Name + "(" + codeAttribute.Value + ")");
-					DataTest dataTest = new DataTest(codeFunction.Name, parentAttributes);
-					foreach (CodeElement child in codeAttribute.Children)
-					{
-						EnvDTE80.CodeAttributeArgument attributeArg = (EnvDTE80.CodeAttributeArgument)child;
-						if (String.IsNullOrEmpty(attributeArg.Name))
-							dataTest.AddTestParameter(attributeArg.Value);
-						else
-							dataTest.Parameters.Add(attributeArg.Name, attributeArg.Value);
-					}
-					yield return dataTest;
+					foreach(DataTest dataTest in GetDataTestsForDataRowAttributes(codeClass, dataRowAttributes, codeFunction.Name, parentAttributes))
+						yield return dataTest;
+				}
+				else
+				{
+					foreach(DataTest dataTest in GetDataTestsForDataTestAttributes(codeClass, dataTestAttributes, codeFunction.Name, parentAttributes))
+						yield return dataTest;
 				}
 			}
 		}
+
+		yield break;
+	}
+
+	private IEnumerable<DataTest> GetDataTestsForDataTestAttributes(CodeClass codeClass, List<CodeAttribute> dataTestAttributes, string dataTestMethodName, Dictionary<string, CodeAttribute> parentAttributes)
+	{
+		foreach (CodeAttribute codeAttribute in dataTestAttributes)
+		{
+			WriteLine("// " + codeAttribute.Name + "(" + codeAttribute.Value + ")");
+			DataTest dataTest = new DataTest(dataTestMethodName, parentAttributes);
+			foreach (CodeElement child in codeAttribute.Children)
+			{
+				EnvDTE80.CodeAttributeArgument attributeArg = (EnvDTE80.CodeAttributeArgument)child;
+				if (String.IsNullOrEmpty(attributeArg.Name))
+					dataTest.AddTestParameter(attributeArg.Value);
+				else
+					dataTest.Parameters.Add(attributeArg.Name, attributeArg.Value);
+			}
+			yield return dataTest;
+		}
+	}
+
+	private IEnumerable<DataTest> GetDataTestsForDataRowAttributes(CodeClass codeClass, List<CodeAttribute> dataRowAttributes, string dataTestMethodName, Dictionary<string, CodeAttribute> parentAttributes)
+	{
+		foreach (CodeAttribute codeAttribute in dataRowAttributes)
+		{
+			WriteLine("// " + codeAttribute.Name + "(" + codeAttribute.Value + ")");
+			DataTest dataTest = new DataTest(dataTestMethodName, parentAttributes);
+			foreach (CodeElement child in codeAttribute.Children)
+			{
+				EnvDTE80.CodeAttributeArgument attributeArg = (EnvDTE80.CodeAttributeArgument)child;
+				if (String.IsNullOrEmpty(attributeArg.Name))
+					dataTest.AddTestParameter(attributeArg.Value);
+				else
+					dataTest.Parameters.Add(attributeArg.Name, attributeArg.Value);
+			}
+			yield return dataTest;
+		}
+	}
+
+	private string GetStaticField(CodeClass codeClass, string memberName)
+	{
+		WriteLine("/*");
+        /*var codeProvider = new Microsoft.CSharp.CSharpCodeProvider();
+        var compilerParameters = new System.CodeDom.Compiler.CompilerParameters()
+        {
+            GenerateExecutable = false,
+            GenerateInMemory = true
+        };
+        string fileContents = @"using System; using System.Collections.Generic; namespace tmp { public static class tmpClass { public static IEnumerable<object> GetData() { return " + codeClass.Name + "." + memberName.Substring(1, memberName.Length - 2) + "; } } }";
+		WriteLine(fileContents);
+        var results = codeProvider.CompileAssemblyFromSource(compilerParameters, fileContents);
+        var method = results.CompiledAssembly.GetType("tmp.tmpClass").GetMethod("GetData");
+		WriteLine(method.Invoke(null, null).ToString());*/
+
+		string rawMemberName = memberName.Substring(1, memberName.Length - 2).Replace("(", "").Replace(")", "");
+		foreach (CodeElement element in codeClass.Members)
+		{
+			if (element.Name == rawMemberName)
+			{
+				WriteLine(element.Name);
+				CodeFunction codeFunction = element as CodeFunction;
+				if (codeFunction != null)
+				{
+					string fileContent = Session["InputFileContent"] as string;
+					int memberStart = codeFunction.GetStartPoint(EnvDTE.vsCMPart.vsCMPartBody).AbsoluteCharOffset;
+					int memberEnd = codeFunction.GetEndPoint(EnvDTE.vsCMPart.vsCMPartBody).AbsoluteCharOffset;
+					WriteLine(memberStart.ToString());
+					WriteLine(memberEnd.ToString());
+					WriteLine("------------------------------");
+					WriteLine("|" + fileContent.Substring(memberStart, memberEnd - memberStart) + "|");
+					WriteLine("------------------------------");
+				}
+			}
+		}
+		WriteLine("*/");
+		return "";
 	}
 
 	private void OutputClassHeader(CodeClass codeClass, bool emptyLineBefore)

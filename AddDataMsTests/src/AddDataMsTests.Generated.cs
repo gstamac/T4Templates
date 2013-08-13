@@ -23,4 +23,15 @@ namespace TemplateAttributes
 		public int Timeout { get; set; }
 		public int WorkItem { get; set; }
 	}
+
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
+	internal class DataRowAttribute : Attribute
+	{
+		public DataRowAttribute(params object[] args)
+		{
+			Arguments = args;
+		}
+		public object[] Arguments { get; private set; }
+		public string DisplayName { get; set; }
+	}
 }
