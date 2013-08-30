@@ -32,6 +32,18 @@ public partial class Class1 : IClass1Properties
 ```    
 Properties will be generated with *NotifyPropertyChanging* and *NotifyPropertyChanged* events.
 
+You can define methods with names *On&lt;propName&gt;Changing* and *On&lt;propName&gt;Changed*. They will be called besides firing OnPropertyChanging and OnPropertyChanged events.
+```c#
+[ImplementNotifyPropertyChanged(typeof(IClass1Properties))]
+public partial class Class1 : IClass1Properties
+{
+    protected void OnStringPropertyChanged(string oldValue, string newValue)
+    {
+    // do some stuff with oldValue or newValue
+    }
+}
+```    
+
 AddDataMsTests.tt
 -----------------
 
@@ -107,4 +119,4 @@ public void DataTest_12_12()
 {
     Assert.AreEqual(12, DataTest("12"));
 }
-```    
+```
