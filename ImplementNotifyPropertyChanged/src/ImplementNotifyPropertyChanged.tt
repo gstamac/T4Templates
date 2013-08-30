@@ -102,7 +102,10 @@
 		OutputClassHeader(codeClass, emptyLineBefore, implementNotifyPropertyChanged);
 
 		if (implementNotifyPropertyChanged)
-			OutputClassProperties(codeClass, interfaces);
+		{
+			List<CodeFunction> changeMethods = GetClassChangeMethodes(codeClass);
+			OutputClassProperties(codeClass, interfaces, changeMethods);
+		}
 
 		bool firstElement = true;
 		foreach (CodeElement element in codeClass.Children)
@@ -148,6 +151,20 @@
 		return false;
 	}
 
+	private List<CodeFunction> GetClassChangeMethodes(CodeClass codeClass)
+	{
+		List<CodeFunction> list = new List<CodeFunction>();
+		foreach (CodeElement element in codeClass.Members)
+		{
+			CodeFunction codeFunction = element as CodeFunction;
+			if (codeFunction != null && codeFunction.Name.StartsWith("On") && (codeFunction.Name.EndsWith("Changed") || codeFunction.Name.EndsWith("Changing")))
+			{
+				list.Add(codeFunction);
+			}
+		}
+		return list;
+	}
+
 	private void OutputClassHeader(CodeClass codeClass, bool emptyLineBefore, bool implementNotifyPropertyChanged)
 	{
 		if (emptyLineBefore) WriteLine("");
@@ -159,13 +176,13 @@
 		PushIndent("\t");
 	}
 
-	private void OutputClassProperties(CodeClass codeClass, IEnumerable<CodeInterface> interfaces)
+	private void OutputClassProperties(CodeClass codeClass, IEnumerable<CodeInterface> interfaces, List<CodeFunction> changeMethods)
 	{
 		foreach (CodeInterface iface in interfaces)
-            OutputInterfaceProperties(iface);
+            OutputInterfaceProperties(iface, changeMethods);
 	}
 
-	private void OutputInterfaceProperties(CodeInterface codeInterface)
+	private void OutputInterfaceProperties(CodeInterface codeInterface, List<CodeFunction> changeMethods)
 	{
 		foreach (CodeElement element in codeInterface.Members)
 		{
@@ -175,7 +192,7 @@
 				if (codeProperty.Setter == null)
 					OutputReadOnlyProperty(codeProperty);
 				else
-					OutputPropertyWithStore(codeProperty);
+					OutputPropertyWithStore(codeProperty, changeMethods);
 				WriteLine("");
 			}
 		}
@@ -186,7 +203,7 @@
 		WriteLine("public " + codeProperty.Type.CodeType.FullName + " " + codeProperty.Name + " { get; private set; }");
 	}
 	
-	private void OutputPropertyWithStore(CodeProperty codeProperty)
+	private void OutputPropertyWithStore(CodeProperty codeProperty, List<CodeFunction> changeMethods)
 	{
 		string propertyTypeName = codeProperty.Type.CodeType.FullName;
 		string storeName = "_" + codeProperty.Name;
@@ -198,7 +215,16 @@
 		if (codeProperty.Getter != null)
 			WriteLine("get { return " + storeName + "; }");
 
-		WriteLine("set { ChangeProperty<" + propertyTypeName + ">(\"" + codeProperty.Name + "\", ref " + storeName + ", value); }");
+		string changeCommand = "set { ChangeProperty<" + propertyTypeName + ">(\"" + codeProperty.Name + "\", ref " + storeName + ", value";
+		foreach(CodeFunction codeFunction in changeMethods)
+		{
+			if (codeFunction.Name == "On" + codeProperty.Name + "Changing")
+				changeCommand += ", changingCallback: " + "On" + codeProperty.Name + "Changing";
+			else if (codeFunction.Name == "On" + codeProperty.Name + "Changed")
+				changeCommand += ", changingCallback: " + "On" + codeProperty.Name + "Changed";
+		}
+		changeCommand += "); }";
+		WriteLine(changeCommand);
 
 		PopIndent();
 		WriteLine("}");
@@ -232,13 +258,16 @@
 		WriteLine("}");
 		WriteLine("");
 
-		WriteLine("protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue)");
+		WriteLine("protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changingCallback = null, Action<T, T> changedCallback = null)");
 		WriteLine("{");
 		PushIndent("\t");
 		WriteLine("if ((propertyValue == null && newValue == null) || (propertyValue != null && propertyValue.Equals(newValue))) return;");
+        WriteLine("T oldValue = propertyValue;");
+        WriteLine("if (changingCallback != null) changingCallback(oldValue, newValue);");
 		WriteLine("RaisePropertyChanging(propertyName);");
 		WriteLine("propertyValue = newValue;");
 		WriteLine("RaisePropertyChanged(propertyName);");
+        WriteLine("if (changedCallback != null) changedCallback(oldValue, newValue);");
 		PopIndent();
 		WriteLine("}");
 		WriteLine("");
