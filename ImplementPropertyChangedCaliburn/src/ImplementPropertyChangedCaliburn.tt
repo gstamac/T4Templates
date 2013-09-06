@@ -98,11 +98,11 @@
 		if (!IsPartialClass(codeClass)) return;
 
 		List<CodeInterface> interfaces = GetClassNotifyInterfaces(codeClass);
-		bool ImplementPropertyChangedCaliburn = interfaces.Count > 0;
+		bool needsPropertyChangedBase = NeedsPropertyChangedBase(codeClass, interfaces);
 
-		OutputClassHeader(codeClass, emptyLineBefore, ImplementPropertyChangedCaliburn);
+		OutputClassHeader(codeClass, emptyLineBefore, needsPropertyChangedBase);
 
-		if (ImplementPropertyChangedCaliburn)
+		if (interfaces.Count > 0)
 		{
 			List<CodeFunction> changeMethods = GetClassChangeMethodes(codeClass);
 			OutputClassProperties(codeClass, interfaces, changeMethods);
@@ -119,7 +119,7 @@
 			}
 		}
 
-		if (ImplementPropertyChangedCaliburn)
+		if (needsPropertyChangedBase)
 			OutputClassNotifyPropertyChangedImplementation(codeClass);
 
 		OutputClassFooter(codeClass);
@@ -140,6 +140,26 @@
 				list.Add(iface);
 		}
 		return list;
+	}
+
+	private bool NeedsPropertyChangedBase(CodeClass codeClass, List<CodeInterface> interfaces)
+	{
+		foreach (CodeClass parentClass in codeClass.Bases)
+        {
+			if (InheritsPropertyChangedBase(parentClass))
+				return false;
+        }
+		return interfaces.Count > 0;
+	}
+
+	private bool InheritsPropertyChangedBase(CodeClass codeClass)
+	{
+		foreach (CodeClass parentClass in codeClass.Bases)
+        {
+			if (parentClass.FullName == "Caliburn.Micro.PropertyChangedBase" || InheritsPropertyChangedBase(parentClass))
+				return true;
+        }
+		return false;
 	}
 
 	private bool ClassHasAttributeForInterface(CodeClass codeClass, string interfaceName)
@@ -166,10 +186,10 @@
 		return list;
 	}
 
-	private void OutputClassHeader(CodeClass codeClass, bool emptyLineBefore, bool ImplementPropertyChangedCaliburn)
+	private void OutputClassHeader(CodeClass codeClass, bool emptyLineBefore, bool needsPropertyChangedBase)
 	{
 		if (emptyLineBefore) WriteLine("");
-		if (ImplementPropertyChangedCaliburn)
+		if (needsPropertyChangedBase)
 			WriteLine("partial class " + codeClass.Name + ": PropertyChangedBase");
 		else
 			WriteLine("partial class " + codeClass.Name);

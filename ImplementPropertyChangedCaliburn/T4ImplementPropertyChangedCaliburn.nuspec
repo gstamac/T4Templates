@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>T4ImplementPropertyChangedCaliburn</id>
-        <version>0.4</version>
+        <version>0.5</version>
         <authors>gstamac</authors>
         <owners>Gregor Stamac</owners>
         <description>T4 template for generating partial class implementing INotifyPropertyChanged from interface using Caliburn.Micro.PropertyChangedBase.</description>
