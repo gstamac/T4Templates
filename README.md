@@ -44,6 +44,12 @@ public partial class Class1 : IClass1Properties
 }
 ```    
 
+ImplementPropertyChangedCaliburn.tt
+---------------------------------
+Same as **ImplementNotifyPropertyChanged** template but uses *PropertyChangedBase* from [Caliburn.Micro](https://caliburnmicro.codeplex.com/) framework. *PropertyChangedBase* dispatches all property changed events to UI thread. 
+
+Note that *INotifyPropertyChanging* is not implemented in PropertyChangedBase. Everything else is the same as **ImplementNotifyPropertyChanged** template.
+
 AddDataMsTests.tt
 -----------------
 
