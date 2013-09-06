@@ -221,7 +221,7 @@
 			if (codeFunction.Name == "On" + codeProperty.Name + "Changing")
 				changeCommand += ", changingCallback: " + "On" + codeProperty.Name + "Changing";
 			else if (codeFunction.Name == "On" + codeProperty.Name + "Changed")
-				changeCommand += ", changingCallback: " + "On" + codeProperty.Name + "Changed";
+				changeCommand += ", changedCallback: " + "On" + codeProperty.Name + "Changed";
 		}
 		changeCommand += "); }";
 		WriteLine(changeCommand);
