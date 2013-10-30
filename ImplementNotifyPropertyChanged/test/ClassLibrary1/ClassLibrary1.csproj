@@ -39,6 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\src\ImplementNotifyPropertyChanged.Generated.cs">
+      <Link>ImplementNotifyPropertyChanged.Generated.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ImplementNotifyPropertyChanged.tt</DependentUpon>
+    </Compile>
     <Compile Include="Class1.cs">
       <Template>..\..\src\ImplementNotifyPropertyChanged.tt</Template>
       <Generator>T4Toolbox.TemplatedFileGenerator</Generator>
@@ -48,23 +54,25 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Class1.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImplementNotifyPropertyChanged.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ImplementNotifyPropertyChanged.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ImplementNotifyPropertyChanged.tt">
+    <None Include="..\..\src\ImplementNotifyPropertyChanged.tt">
+      <Link>ImplementNotifyPropertyChanged.tt</Link>
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ImplementNotifyPropertyChanged.Generated.cs</LastGenOutput>
+      <LastOutputs>.\ImplementNotifyPropertyChanged.Generated.cs</LastOutputs>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties Class1_cs_UseParentNamespace="False" />
+    </VisualStudio>
+  </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -50,6 +50,7 @@ namespace ClassLibrary1.Namespace1
 
 
 		#region INotifyPropertyChanged implementation
+		//ncrunch: no coverage start
 
 		protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changedCallback = null)
 		{
@@ -65,6 +66,7 @@ namespace ClassLibrary1.Namespace1
 			return propertySelector.GetMemberInfo().Name;
 		}
 
+		//ncrunch: no coverage end
 		#endregion
 	}
 
@@ -144,6 +146,7 @@ namespace ClassLibrary1.Namespace1
 
 
 				#region INotifyPropertyChanged implementation
+				//ncrunch: no coverage start
 
 				protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changedCallback = null)
 				{
@@ -159,6 +162,7 @@ namespace ClassLibrary1.Namespace1
 					return propertySelector.GetMemberInfo().Name;
 				}
 
+				//ncrunch: no coverage end
 				#endregion
 			}
 
@@ -180,6 +184,7 @@ namespace ClassLibrary1.Namespace1
 
 
 				#region INotifyPropertyChanged implementation
+				//ncrunch: no coverage start
 
 				protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changedCallback = null)
 				{
@@ -195,6 +200,7 @@ namespace ClassLibrary1.Namespace1
 					return propertySelector.GetMemberInfo().Name;
 				}
 
+				//ncrunch: no coverage end
 				#endregion
 			}
 
@@ -203,6 +209,7 @@ namespace ClassLibrary1.Namespace1
 			}
 
 			#region INotifyPropertyChanged implementation
+			//ncrunch: no coverage start
 
 			protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changedCallback = null)
 			{
@@ -218,6 +225,7 @@ namespace ClassLibrary1.Namespace1
 				return propertySelector.GetMemberInfo().Name;
 			}
 
+			//ncrunch: no coverage end
 			#endregion
 		}
 	}

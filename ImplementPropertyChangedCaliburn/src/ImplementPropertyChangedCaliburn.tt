@@ -20,6 +20,7 @@
 	} else {
 		WriteLine("using System;");
 		WriteLine("");
+		WriteLine("//ncrunch: no coverage start");
 		WriteLine("namespace " + ImplementPropertyChangedCaliburnAttributeNamespace);
 		WriteLine("{");
 		PushIndent("\t");
@@ -39,6 +40,7 @@
         WriteLine("}");
 		PopIndent();
         WriteLine("}");
+		WriteLine("//ncrunch: no coverage end");
 	}
 #>
 <#+
@@ -248,6 +250,7 @@
 	{
 		WriteLine("");
 		WriteLine("#region INotifyPropertyChanged implementation");
+		WriteLine("//ncrunch: no coverage start");
 		WriteLine("");
 		WriteLine("protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changedCallback = null)");
 		WriteLine("{");
@@ -269,6 +272,7 @@
         WriteLine("}");
 
 		WriteLine("");
+		WriteLine("//ncrunch: no coverage end");
 		WriteLine("#endregion");
 	}
 

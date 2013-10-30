@@ -49,6 +49,7 @@ namespace ClassLibrary1.Namespace1
 
 
 		#region INotifyPropertyChanged implementation
+		//ncrunch: no coverage start
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		public event PropertyChangingEventHandler PropertyChanging;
@@ -92,6 +93,7 @@ namespace ClassLibrary1.Namespace1
 			return memberExpression.Member.Name;
 		}
 
+		//ncrunch: no coverage end
 		#endregion
 	}
 
@@ -171,6 +173,7 @@ namespace ClassLibrary1.Namespace1
 
 
 				#region INotifyPropertyChanged implementation
+				//ncrunch: no coverage start
 
 				public event PropertyChangedEventHandler PropertyChanged;
 				public event PropertyChangingEventHandler PropertyChanging;
@@ -214,6 +217,7 @@ namespace ClassLibrary1.Namespace1
 					return memberExpression.Member.Name;
 				}
 
+				//ncrunch: no coverage end
 				#endregion
 			}
 
@@ -235,6 +239,7 @@ namespace ClassLibrary1.Namespace1
 
 
 				#region INotifyPropertyChanged implementation
+				//ncrunch: no coverage start
 
 				public event PropertyChangedEventHandler PropertyChanged;
 				public event PropertyChangingEventHandler PropertyChanging;
@@ -278,6 +283,7 @@ namespace ClassLibrary1.Namespace1
 					return memberExpression.Member.Name;
 				}
 
+				//ncrunch: no coverage end
 				#endregion
 			}
 
@@ -286,6 +292,7 @@ namespace ClassLibrary1.Namespace1
 			}
 
 			#region INotifyPropertyChanged implementation
+			//ncrunch: no coverage start
 
 			public event PropertyChangedEventHandler PropertyChanged;
 			public event PropertyChangingEventHandler PropertyChanging;
@@ -329,6 +336,7 @@ namespace ClassLibrary1.Namespace1
 				return memberExpression.Member.Name;
 			}
 
+			//ncrunch: no coverage end
 			#endregion
 		}
 	}

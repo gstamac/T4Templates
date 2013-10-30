@@ -20,6 +20,7 @@
 	} else {
 		WriteLine("using System;");
 		WriteLine("");
+		WriteLine("//ncrunch: no coverage start");
 		WriteLine("namespace " + ImplementNotifyPropertyChangedAttributeNamespace);
 		WriteLine("{");
 		PushIndent("\t");
@@ -39,6 +40,7 @@
         WriteLine("}");
 		PopIndent();
         WriteLine("}");
+		WriteLine("//ncrunch: no coverage end");
 	}
 #>
 <#+
@@ -229,6 +231,7 @@
 	{
 		WriteLine("");
 		WriteLine("#region INotifyPropertyChanged implementation");
+		WriteLine("//ncrunch: no coverage start");
 		WriteLine("");
 		WriteLine("public event PropertyChangedEventHandler PropertyChanged;");
 		WriteLine("public event PropertyChangingEventHandler PropertyChanging;");
@@ -296,6 +299,7 @@
         WriteLine("}");
 
 		WriteLine("");
+		WriteLine("//ncrunch: no coverage end");
 		WriteLine("#endregion");
 	}
 

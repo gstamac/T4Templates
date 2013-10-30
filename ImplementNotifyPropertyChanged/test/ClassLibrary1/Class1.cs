@@ -9,7 +9,7 @@ using TemplateAttributes;
 
 namespace ClassLibrary1.Namespace1
 {
-    public interface IClass1Properties
+    public interface IClass1Properties 
     {
         string StringProperty { get; set; }
         int IntProperty { get; set; }
