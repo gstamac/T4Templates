@@ -210,21 +210,13 @@
 			CodeProperty codeProperty = element as CodeProperty;
 			if (codeProperty != null)
 			{
-				if (codeProperty.Setter == null)
-					OutputReadOnlyProperty(codeProperty);
-				else
-					OutputPropertyWithStore(codeProperty, changeMethods);
+				OutputProperty(codeProperty, changeMethods, codeProperty.Setter == null);
 				WriteLine("");
 			}
 		}
 	}
 
-	private void OutputReadOnlyProperty(CodeProperty codeProperty)
-	{
-		WriteLine("public " + codeProperty.Type.CodeType.FullName + " " + codeProperty.Name + " { get; private set; }");
-	}
-	
-	private void OutputPropertyWithStore(CodeProperty codeProperty, List<CodeFunction> changeMethods)
+	private void OutputProperty(CodeProperty codeProperty, List<CodeFunction> changeMethods, bool setterPrivate)
 	{
 		string propertyTypeName = codeProperty.Type.CodeType.FullName;
 		string storeName = "_" + codeProperty.Name;
@@ -236,7 +228,10 @@
 		if (codeProperty.Getter != null)
 			WriteLine("get { return " + storeName + "; }");
 
-		string changeCommand = "set { ChangeProperty<" + propertyTypeName + ">(\"" + codeProperty.Name + "\", ref " + storeName + ", value";
+		string changeCommand = "";
+		if (setterPrivate)
+			changeCommand += "private ";
+		changeCommand += "set { ChangeProperty<" + propertyTypeName + ">(\"" + codeProperty.Name + "\", ref " + storeName + ", value";
 		foreach(CodeFunction codeFunction in changeMethods)
 		{
 			if (codeFunction.Name == "On" + codeProperty.Name + "Changed")

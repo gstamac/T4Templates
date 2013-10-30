@@ -52,9 +52,9 @@
       <DependentUpon>ImplementPropertyChangedCaliburn.tt</DependentUpon>
     </Compile>
     <Compile Include="Class1.cs">
-      <Template>..\..\src\ImplementNotifyPropertyChanged.tt</Template>
       <Generator>T4Toolbox.TemplatedFileGenerator</Generator>
       <LastGenOutput>Class1.Generated.cs</LastGenOutput>
+      <Template>..\..\src\ImplementPropertyChangedCaliburn.tt</Template>
     </Compile>
     <Compile Include="Class1.Generated.cs">
       <AutoGen>True</AutoGen>

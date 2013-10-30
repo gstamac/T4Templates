@@ -21,9 +21,19 @@ namespace ClassLibrary1.Namespace1
 			set { ChangeProperty<System.Int32>("IntProperty", ref _IntProperty, value); }
 		}
 
-		public System.String ReadOnlyStringProperty { get; private set; }
+		private System.String _ReadOnlyStringProperty;
+		public System.String ReadOnlyStringProperty
+		{
+			get { return _ReadOnlyStringProperty; }
+			private set { ChangeProperty<System.String>("ReadOnlyStringProperty", ref _ReadOnlyStringProperty, value); }
+		}
 
-		public System.Int32 ReadOnlyIntProperty { get; private set; }
+		private System.Int32 _ReadOnlyIntProperty;
+		public System.Int32 ReadOnlyIntProperty
+		{
+			get { return _ReadOnlyIntProperty; }
+			private set { ChangeProperty<System.Int32>("ReadOnlyIntProperty", ref _ReadOnlyIntProperty, value); }
+		}
 
 		private System.String _WriteOnlyStringProperty;
 		public System.String WriteOnlyStringProperty
@@ -53,12 +63,15 @@ namespace ClassLibrary1.Namespace1
 				PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
 		}
 
-		protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue)
+		protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changingCallback = null, Action<T, T> changedCallback = null)
 		{
 			if ((propertyValue == null && newValue == null) || (propertyValue != null && propertyValue.Equals(newValue))) return;
+			T oldValue = propertyValue;
+			if (changingCallback != null) changingCallback(oldValue, newValue);
 			RaisePropertyChanging(propertyName);
 			propertyValue = newValue;
 			RaisePropertyChanged(propertyName);
+			if (changedCallback != null) changedCallback(oldValue, newValue);
 		}
 
 		public string GetPropertyName<TProperty>(Expression<Func<ClassLibrary1.Namespace1.Class1, TProperty>> propertySelector)
@@ -116,9 +129,19 @@ namespace ClassLibrary1.Namespace1
 					set { ChangeProperty<System.Int32>("IntProperty", ref _IntProperty, value); }
 				}
 
-				public System.String ReadOnlyStringProperty { get; private set; }
+				private System.String _ReadOnlyStringProperty;
+				public System.String ReadOnlyStringProperty
+				{
+					get { return _ReadOnlyStringProperty; }
+					private set { ChangeProperty<System.String>("ReadOnlyStringProperty", ref _ReadOnlyStringProperty, value); }
+				}
 
-				public System.Int32 ReadOnlyIntProperty { get; private set; }
+				private System.Int32 _ReadOnlyIntProperty;
+				public System.Int32 ReadOnlyIntProperty
+				{
+					get { return _ReadOnlyIntProperty; }
+					private set { ChangeProperty<System.Int32>("ReadOnlyIntProperty", ref _ReadOnlyIntProperty, value); }
+				}
 
 				private System.String _WriteOnlyStringProperty;
 				public System.String WriteOnlyStringProperty
@@ -162,12 +185,15 @@ namespace ClassLibrary1.Namespace1
 						PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
 				}
 
-				protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue)
+				protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changingCallback = null, Action<T, T> changedCallback = null)
 				{
 					if ((propertyValue == null && newValue == null) || (propertyValue != null && propertyValue.Equals(newValue))) return;
+					T oldValue = propertyValue;
+					if (changingCallback != null) changingCallback(oldValue, newValue);
 					RaisePropertyChanging(propertyName);
 					propertyValue = newValue;
 					RaisePropertyChanged(propertyName);
+					if (changedCallback != null) changedCallback(oldValue, newValue);
 				}
 
 				public string GetPropertyName<TProperty>(Expression<Func<ClassLibrary1.Namespace1.Namespace2.Class2.InnerClass2, TProperty>> propertySelector)
@@ -223,12 +249,15 @@ namespace ClassLibrary1.Namespace1
 						PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
 				}
 
-				protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue)
+				protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changingCallback = null, Action<T, T> changedCallback = null)
 				{
 					if ((propertyValue == null && newValue == null) || (propertyValue != null && propertyValue.Equals(newValue))) return;
+					T oldValue = propertyValue;
+					if (changingCallback != null) changingCallback(oldValue, newValue);
 					RaisePropertyChanging(propertyName);
 					propertyValue = newValue;
 					RaisePropertyChanged(propertyName);
+					if (changedCallback != null) changedCallback(oldValue, newValue);
 				}
 
 				public string GetPropertyName<TProperty>(Expression<Func<ClassLibrary1.Namespace1.Namespace2.Class2.InnerClass3, TProperty>> propertySelector)
@@ -271,12 +300,15 @@ namespace ClassLibrary1.Namespace1
 					PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
 			}
 
-			protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue)
+			protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changingCallback = null, Action<T, T> changedCallback = null)
 			{
 				if ((propertyValue == null && newValue == null) || (propertyValue != null && propertyValue.Equals(newValue))) return;
+				T oldValue = propertyValue;
+				if (changingCallback != null) changingCallback(oldValue, newValue);
 				RaisePropertyChanging(propertyName);
 				propertyValue = newValue;
 				RaisePropertyChanged(propertyName);
+				if (changedCallback != null) changedCallback(oldValue, newValue);
 			}
 
 			public string GetPropertyName<TProperty>(Expression<Func<ClassLibrary1.Namespace1.Namespace2.Class2, TProperty>> propertySelector)

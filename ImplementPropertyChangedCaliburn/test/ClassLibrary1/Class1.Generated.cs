@@ -22,9 +22,19 @@ namespace ClassLibrary1.Namespace1
 			set { ChangeProperty<System.Int32>("IntProperty", ref _IntProperty, value); }
 		}
 
-		public System.String ReadOnlyStringProperty { get; private set; }
+		private System.String _ReadOnlyStringProperty;
+		public System.String ReadOnlyStringProperty
+		{
+			get { return _ReadOnlyStringProperty; }
+			private set { ChangeProperty<System.String>("ReadOnlyStringProperty", ref _ReadOnlyStringProperty, value); }
+		}
 
-		public System.Int32 ReadOnlyIntProperty { get; private set; }
+		private System.Int32 _ReadOnlyIntProperty;
+		public System.Int32 ReadOnlyIntProperty
+		{
+			get { return _ReadOnlyIntProperty; }
+			private set { ChangeProperty<System.Int32>("ReadOnlyIntProperty", ref _ReadOnlyIntProperty, value); }
+		}
 
 		private System.String _WriteOnlyStringProperty;
 		public System.String WriteOnlyStringProperty
@@ -92,9 +102,19 @@ namespace ClassLibrary1.Namespace1
 					set { ChangeProperty<System.Int32>("IntProperty", ref _IntProperty, value); }
 				}
 
-				public System.String ReadOnlyStringProperty { get; private set; }
+				private System.String _ReadOnlyStringProperty;
+				public System.String ReadOnlyStringProperty
+				{
+					get { return _ReadOnlyStringProperty; }
+					private set { ChangeProperty<System.String>("ReadOnlyStringProperty", ref _ReadOnlyStringProperty, value); }
+				}
 
-				public System.Int32 ReadOnlyIntProperty { get; private set; }
+				private System.Int32 _ReadOnlyIntProperty;
+				public System.Int32 ReadOnlyIntProperty
+				{
+					get { return _ReadOnlyIntProperty; }
+					private set { ChangeProperty<System.Int32>("ReadOnlyIntProperty", ref _ReadOnlyIntProperty, value); }
+				}
 
 				private System.String _WriteOnlyStringProperty;
 				public System.String WriteOnlyStringProperty

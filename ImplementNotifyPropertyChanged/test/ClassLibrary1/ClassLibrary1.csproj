@@ -39,9 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\src\ImplementNotifyPropertyChanged.Generated.cs">
-      <Link>ImplementNotifyPropertyChanged.Generated.cs</Link>
-    </Compile>
     <Compile Include="Class1.cs">
       <Template>..\..\src\ImplementNotifyPropertyChanged.tt</Template>
       <Generator>T4Toolbox.TemplatedFileGenerator</Generator>
@@ -51,10 +48,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Class1.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImplementNotifyPropertyChanged.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ImplementNotifyPropertyChanged.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ImplementNotifyPropertyChanged.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ImplementNotifyPropertyChanged.Generated.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
