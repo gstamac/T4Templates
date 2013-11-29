@@ -6,6 +6,8 @@ using Caliburn.Micro;
 
 namespace ClassLibrary1
 {
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementPropertyChangedCaliburn.tt", "")]
+	[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 	partial class Class2Parent: PropertyChangedBase
 	{
 		private System.String _ParentProperty;
@@ -37,6 +39,8 @@ namespace ClassLibrary1
 		#endregion
 	}
 
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementPropertyChangedCaliburn.tt", "")]
+	[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 	partial class Class2Child
 	{
 		private System.String _ChildProperty;
@@ -48,6 +52,8 @@ namespace ClassLibrary1
 
 	}
 
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementPropertyChangedCaliburn.tt", "")]
+	[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 	partial class Class2ChildsChild
 	{
 		private System.String _ChildsChildProperty;

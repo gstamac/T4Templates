@@ -170,6 +170,8 @@
 	private void OutputClassHeader(CodeClass codeClass, bool emptyLineBefore, bool implementNotifyPropertyChanged)
 	{
 		if (emptyLineBefore) WriteLine("");
+		WriteLine("[System.CodeDom.Compiler.GeneratedCodeAttribute(\"ImplementNotifyPropertyChanged.tt\", \"\")]");
+		WriteLine("[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]");
 		if (implementNotifyPropertyChanged)
 			WriteLine("partial class " + codeClass.Name + ": INotifyPropertyChanged, INotifyPropertyChanging");
 		else

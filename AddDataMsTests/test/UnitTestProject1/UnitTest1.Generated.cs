@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTestProject1
 {
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("AddDataMsTests.tt", "")]
+	[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 	partial class UnitTest1
 	{
 		// DataTestMethod("10", 10)

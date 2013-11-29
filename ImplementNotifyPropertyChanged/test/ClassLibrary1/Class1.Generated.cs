@@ -5,6 +5,8 @@ using System.Linq.Expressions;
 
 namespace ClassLibrary1.Namespace1
 {
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementNotifyPropertyChanged.tt", "")]
+	[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 	partial class Class1: INotifyPropertyChanged, INotifyPropertyChanging
 	{
 		private System.String _StringProperty;
@@ -99,6 +101,8 @@ namespace ClassLibrary1.Namespace1
 
 	namespace Namespace2
 	{
+		[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementNotifyPropertyChanged.tt", "")]
+		[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 		partial class Class2: INotifyPropertyChanged, INotifyPropertyChanging
 		{
 			private System.String _StringProperty2;
@@ -115,6 +119,8 @@ namespace ClassLibrary1.Namespace1
 				set { ChangeProperty<System.Int32>("IntProperty2", ref _IntProperty2, value); }
 			}
 
+			[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementNotifyPropertyChanged.tt", "")]
+			[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 			partial class InnerClass2: INotifyPropertyChanged, INotifyPropertyChanging
 			{
 				private System.String _StringProperty;
@@ -221,6 +227,8 @@ namespace ClassLibrary1.Namespace1
 				#endregion
 			}
 
+			[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementNotifyPropertyChanged.tt", "")]
+			[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 			partial class InnerClass3: INotifyPropertyChanged, INotifyPropertyChanging
 			{
 				private System.String _StringProperty2;
@@ -287,6 +295,8 @@ namespace ClassLibrary1.Namespace1
 				#endregion
 			}
 
+			[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementNotifyPropertyChanged.tt", "")]
+			[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 			partial class InnerClass4
 			{
 			}
