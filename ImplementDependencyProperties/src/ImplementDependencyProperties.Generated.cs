@@ -5,9 +5,9 @@ using System;
 namespace TemplateAttributes
 {
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-	internal class ImplementNotifyPropertyChangedAttribute : Attribute
+	internal class ImplementDependencyPropertiesAttribute : Attribute
 	{
-		public ImplementNotifyPropertyChangedAttribute(Type aInterface)
+		public ImplementDependencyPropertiesAttribute(Type aInterface)
 		{
 			Interface = aInterface;
 		}

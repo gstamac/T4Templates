@@ -1,0 +1,102 @@
+﻿<#@ IntelliSenseLanguage processor="tangibleT4Editor" language="C#" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ assembly name="EnvDTE" #>
+<#@ import namespace="EnvDTE" #>
+<#@ assembly name="EnvDTE80" #>
+<#+ 
+	private FileCodeModel GetCodeModel(string filename)
+	{
+		var dte = (DTE)TransformationContext.Current.GetService(typeof(DTE));
+		ProjectItem projectItem = dte.Solution.FindProjectItem(filename);
+		return projectItem.FileCodeModel;
+	}
+
+	private bool IsPartialClass(CodeClass codeClass)
+	{
+		EnvDTE80.CodeClass2 codeClass2 = codeClass as EnvDTE80.CodeClass2;
+		return (codeClass2 != null) && (codeClass2.ClassKind == EnvDTE80.vsCMClassKind.vsCMClassKindPartialClass);
+	}
+
+	private void ProcessElements(CodeElements elements)
+	{
+		bool firstElement = true;
+		foreach (CodeElement element in elements)
+		{
+			CodeNamespace codeNamespace = element as CodeNamespace;
+			CodeClass codeClass = element as CodeClass;
+			if (codeNamespace != null) 
+			{
+				ProcessNamespace(codeNamespace, !firstElement);
+				firstElement = false;
+			} else if (codeClass != null)
+			{
+				ProcessClass(codeClass, !firstElement);
+				firstElement = false;
+			}
+		}
+	}
+
+	private void ProcessNamespace(CodeNamespace codeNamespace, bool emptyLineBefore)
+	{
+		if (emptyLineBefore) WriteLine("");
+		WriteLine("namespace " + codeNamespace.Name);
+		WriteLine("{");
+		PushIndent("\t");
+		ProcessElements(codeNamespace.Children);
+		PopIndent();
+		WriteLine("}");
+	}
+
+	private IEnumerable<CodeInterface> GetClassInterfaces(CodeClass codeClass)
+	{
+		return codeClass.ImplementedInterfaces.OfType<CodeInterface>();
+	}
+
+	private IEnumerable<CodeAttribute> GetClassAttributes(CodeClass codeClass)
+	{
+		return codeClass.Attributes.OfType<CodeAttribute>();
+    }
+
+	private IEnumerable<CodeFunction> GetClassFunctions(CodeClass codeClass)
+    {
+		return codeClass.Members.OfType<CodeFunction>();
+	}
+
+	private IEnumerable<CodeClass> GetClassBases(CodeClass codeClass)
+    {
+		return codeClass.Bases.OfType<CodeClass>();
+	}
+
+	private void OutputClassHeader(CodeClass codeClass, string classDeclarationSuffix = null)
+	{
+		WriteLine("[System.CodeDom.Compiler.GeneratedCodeAttribute(\"" + System.IO.Path.GetFileName(Host.TemplateFile) + "\", \"\")]");
+		WriteLine("[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]");
+		if (!String.IsNullOrEmpty(classDeclarationSuffix))
+			WriteLine("partial class " + codeClass.Name + classDeclarationSuffix);
+		else
+			WriteLine("partial class " + codeClass.Name);
+		WriteLine("{");
+		PushIndent("\t");
+	}
+
+	private void OutputClassFooter(CodeClass codeClass)
+	{
+		PopIndent();
+		WriteLine("}");
+	}
+
+	private void DumpElements(CodeElements elements)
+	{
+		foreach (CodeElement element in elements)
+		{
+			string elDump = element.Kind.ToString();
+			if (element.Kind == vsCMElement.vsCMElementNamespace || element.Kind == vsCMElement.vsCMElementClass)
+				elDump += ": " + element.Name;
+			elDump += " -> " + element.Children.Count.ToString();
+			WriteLine(elDump);
+			DumpElements(element.Children);
+		}
+	}
+#>

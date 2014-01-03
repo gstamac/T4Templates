@@ -1,0 +1,167 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ assembly name="EnvDTE" #>
+<#@ import namespace="EnvDTE" #>
+<#@ assembly name="EnvDTE80" #>
+<#@ include file="T4Toolbox.tt" #>
+<#@ output extension=".Generated.cs" #>
+<#@ include file="..\..\_Common\CodeModelUtils.ttinclude" #>
+<#
+	if (Session.ContainsKey("InputFileName"))
+	{
+		FileCodeModel codeModel = GetCodeModel(Session["InputFileName"] as string);
+
+		//WriteLine("/*");
+		//DumpElements(codeModel.CodeElements);
+		//WriteLine("*/");
+
+		OutputUsings();
+
+		ProcessElements(codeModel.CodeElements);
+	} else {
+		WriteLine("using System;");
+		WriteLine("");
+		WriteLine("//ncrunch: no coverage start");
+		WriteLine("namespace " + ImplementDependencyPropertiesAttributeNamespace);
+		WriteLine("{");
+		PushIndent("\t");
+		WriteLine("[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]");
+		WriteLine("internal class " + ImplementDependencyPropertiesAttributeName + " : Attribute");
+		WriteLine("{");
+		PushIndent("\t");
+		WriteLine("public " + ImplementDependencyPropertiesAttributeName + "(Type aInterface)");
+        WriteLine("{");
+		PushIndent("\t");
+        WriteLine("Interface = aInterface;");
+		PopIndent();
+        WriteLine("}");
+
+        WriteLine("public Type Interface { get; private set; }");
+		PopIndent();
+        WriteLine("}");
+		PopIndent();
+        WriteLine("}");
+		WriteLine("//ncrunch: no coverage end");
+	}
+#>
+<#+
+	const string ImplementDependencyPropertiesAttributeNamespace = "TemplateAttributes";
+	const string ImplementDependencyPropertiesAttributeName = "ImplementDependencyPropertiesAttribute";
+	const string ImplementDependencyPropertiesAttributeFullName = ImplementDependencyPropertiesAttributeNamespace + "." + ImplementDependencyPropertiesAttributeName;
+
+	private void OutputUsings() 
+	{
+		WriteLine("using System;");
+		WriteLine("using System.ComponentModel;");
+		WriteLine("using System.Linq;");
+		WriteLine("using System.Linq.Expressions;");
+		WriteLine("using System.Windows;");
+		WriteLine("");
+	}
+
+	private void ProcessClass(CodeClass codeClass, bool emptyLineBefore)
+	{
+		if (!IsPartialClass(codeClass)) return;
+
+		List<CodeInterface> interfaces = GetClassNotifyInterfaces(codeClass);
+		bool ImplementDependencyProperties = interfaces.Count > 0;
+
+		if (emptyLineBefore) WriteLine("");
+		OutputClassHeader(codeClass);
+
+		if (ImplementDependencyProperties)
+		{
+			List<CodeFunction> changeMethods = GetClassChangeMethodes(codeClass);
+			foreach (CodeInterface iface in interfaces)
+				OutputInterfaceProperties(codeClass.Name, iface, changeMethods);
+		}
+
+		bool firstElement = true;
+		foreach (CodeElement element in codeClass.Children)
+		{
+			CodeClass innerCodeClass = element as CodeClass;
+			if (innerCodeClass != null)
+			{
+				ProcessClass(innerCodeClass, !firstElement);
+				firstElement = false;
+			}
+		}
+
+		OutputClassFooter(codeClass);
+	}
+
+	private List<CodeInterface> GetClassNotifyInterfaces(CodeClass codeClass)
+	{
+		return GetClassInterfaces(codeClass).Where(i => ClassHasAttributeForInterface(codeClass, i.Name)).ToList();
+	}
+
+	private bool ClassHasAttributeForInterface(CodeClass codeClass, string interfaceName)
+	{
+		string attrValue = "typeof(" + interfaceName + ")";
+		return GetClassAttributes(codeClass).Any(a => a.FullName == ImplementDependencyPropertiesAttributeFullName && a.Value == attrValue);
+	}
+
+	private List<CodeFunction> GetClassChangeMethodes(CodeClass codeClass)
+	{
+		return GetClassFunctions(codeClass).Where(cf => cf.Name.StartsWith("On") && cf.Name.EndsWith("Changed")).ToList();
+	}
+
+	private void OutputInterfaceProperties(string className, CodeInterface codeInterface, List<CodeFunction> changeMethods)
+	{
+		WriteLine("#region " + codeInterface.Name);
+		WriteLine("");
+		foreach (CodeProperty codeProperty in codeInterface.Members.OfType<CodeProperty>())
+		{
+			OutputProperty(className, codeProperty, changeMethods, codeProperty.Setter == null);
+			WriteLine("");
+		}
+		WriteLine("#endregion");
+	}
+
+	private void OutputProperty(string className, CodeProperty codeProperty, List<CodeFunction> changeMethods, bool setterPrivate)
+	{
+		string propertyTypeName = codeProperty.Type.CodeType.FullName;
+		string dependencyPropertyName = codeProperty.Name + "Property";
+
+		string metadataParams = "";
+		metadataParams += "default(" + propertyTypeName + ")";
+		CodeFunction codeFunction = changeMethods.FirstOrDefault(cf => cf.Name == "On" + codeProperty.Name + "Changed");
+		if (codeFunction != null)
+		{
+			if (codeFunction.IsShared)
+				metadataParams += ", " + codeFunction.Name;
+			else
+			{
+				if (codeFunction.Parameters.Count == 2)
+					metadataParams += ", (d, e) => ((" + className + ")d)." + codeFunction.Name + "((" + propertyTypeName + ")e.OldValue, (" + propertyTypeName + ")e.NewValue)";
+				else
+					metadataParams += ", (d, e) => ((" + className + ")d)." + codeFunction.Name + "()";
+			}
+		}
+
+		WriteLine("public static readonly DependencyProperty " + dependencyPropertyName + " = ");
+		PushIndent("\t");
+        WriteLine("DependencyProperty.Register(\"" + codeProperty.Name + "\", typeof(" + propertyTypeName + "), typeof(" + className + "),");
+        WriteLine("new PropertyMetadata(" + metadataParams + "));");
+		PopIndent();
+		WriteLine("");
+
+		WriteLine("public " + propertyTypeName + " " + codeProperty.Name);
+		WriteLine("{");
+		PushIndent("\t");
+
+		if (codeProperty.Getter != null)
+			WriteLine("get { return (" + propertyTypeName + ")GetValue(" + dependencyPropertyName + "); }");
+
+		string changeCommand = "";
+		if (setterPrivate)
+			changeCommand += "private ";
+		changeCommand += "set { SetValue(" + dependencyPropertyName + ", value); }";
+		WriteLine(changeCommand);
+
+		PopIndent();
+		WriteLine("}");
+	}
+#>

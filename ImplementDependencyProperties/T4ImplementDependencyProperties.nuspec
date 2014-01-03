@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
-        <id>T4ImplementPropertyChangedCaliburn</id>
-        <version>0.9</version>
+        <id>T4ImplementDependencyProperties</id>
+        <version>0.1</version>
         <authors>gstamac</authors>
         <owners>Gregor Stamac</owners>
-        <description>T4 template for generating partial class implementing INotifyPropertyChanged from interface using Caliburn.Micro.PropertyChangedBase.</description>
+        <description>T4 template for generating partial class implementing DependencyProperty definitions from interface.</description>
         <copyright>Copyright © Gregor Stamac 2013</copyright>
         <language>en-US</language>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<projectUrl>https://github.com/gstamac/T4Templates</projectUrl>
 		<licenseUrl>https://github.com/gstamac/T4Templates/blob/master/LICENSE</licenseUrl>
-        <tags>T4 T4Toolbox INotifyPropertyChanging INotifyPropertyChanged MVVM view model Caliburn.Micro.PropertyChangedBase</tags>
+        <tags>T4 T4Toolbox DependencyProperty MVVM view model</tags>
     </metadata>
     <files>
-        <file src="src\ImplementPropertyChangedCaliburn.tt" target="content\ImplementPropertyChangedCaliburn.tt" />
+        <file src="src\ImplementDependencyProperties.tt" target="content\ImplementDependencyProperties.tt" />
         <file src="..\_Common\CodeModelUtils.ttinclude" target="content\CodeModelUtils.ttinclude" />
     </files>
 </package>

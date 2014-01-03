@@ -60,17 +60,21 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\_Common\CodeModelUtils.ttinclude">
+      <Link>CodeModelUtils.ttinclude</Link>
+    </None>
     <None Include="..\..\src\ImplementNotifyPropertyChanged.tt">
       <Link>ImplementNotifyPropertyChanged.tt</Link>
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ImplementNotifyPropertyChanged.Generated.cs</LastGenOutput>
       <LastOutputs>.\ImplementNotifyPropertyChanged.Generated.cs</LastOutputs>
+      <FormatOutput>False</FormatOutput>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Class1_cs_UseParentNamespace="False" />
+      <UserProperties Class1_cs_UseParentNamespace="False" Template2_tt_UseParentNamespace="False" Template2_ttinclude_UseParentNamespace="False" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

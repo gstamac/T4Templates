@@ -30,44 +30,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Caliburn.Micro">
-      <HintPath>packages\Caliburn.Micro.1.5.2\lib\net45\Caliburn.Micro.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Caliburn.Micro.1.5.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\src\ImplementPropertyChangedCaliburn.Generated.cs">
-      <Link>ImplementPropertyChangedCaliburn.Generated.cs</Link>
+    <Compile Include="..\..\src\ImplementDependencyProperties.Generated.cs">
+      <Link>ImplementDependencyProperties.Generated.cs</Link>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ImplementPropertyChangedCaliburn.tt</DependentUpon>
+      <DependentUpon>ImplementDependencyProperties.tt</DependentUpon>
     </Compile>
     <Compile Include="Class1.cs">
       <Generator>T4Toolbox.TemplatedFileGenerator</Generator>
       <LastGenOutput>Class1.Generated.cs</LastGenOutput>
-      <Template>..\..\src\ImplementPropertyChangedCaliburn.tt</Template>
+      <Template>..\..\src\ImplementDependencyProperties.tt</Template>
     </Compile>
     <Compile Include="Class1.Generated.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Class1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Class2Parent.cs">
-      <Template>..\..\src\ImplementPropertyChangedCaliburn.tt</Template>
-      <Generator>T4Toolbox.TemplatedFileGenerator</Generator>
-      <LastGenOutput>Class2Parent.Generated.cs</LastGenOutput>
-    </Compile>
-    <Compile Include="Class2Parent.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Class2Parent.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -78,17 +64,17 @@
     <None Include="..\..\..\_Common\CodeModelUtils.ttinclude">
       <Link>CodeModelUtils.ttinclude</Link>
     </None>
-    <None Include="..\..\src\ImplementPropertyChangedCaliburn.tt">
-      <Link>ImplementPropertyChangedCaliburn.tt</Link>
+    <None Include="..\..\src\ImplementDependencyProperties.tt">
+      <Link>ImplementDependencyProperties.tt</Link>
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ImplementPropertyChangedCaliburn.Generated.cs</LastGenOutput>
-      <LastOutputs>.\ImplementPropertyChangedCaliburn.Generated.cs</LastOutputs>
+      <LastGenOutput>ImplementDependencyProperties.Generated.cs</LastGenOutput>
+      <LastOutputs>.\ImplementDependencyProperties.Generated.cs</LastOutputs>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Class2Parent_cs_UseParentNamespace="False" />
+      <UserProperties Class1_cs_UseParentNamespace="False" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

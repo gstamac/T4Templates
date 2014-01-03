@@ -1,9 +1,12 @@
 ﻿<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
 <#@ assembly name="EnvDTE" #>
 <#@ import namespace="EnvDTE" #>
 <#@ assembly name="EnvDTE80" #>
 <#@ include file="T4Toolbox.tt" #>
+<#@ include file="..\..\_Common\CodeModelUtils.ttinclude" #>
 <#@ output extension=".Generated.cs" #>
 <#
 	if (Session.ContainsKey("InputFileName"))
@@ -15,7 +18,6 @@
 		//WriteLine("*/");
 
 		OutputUsings();
-
 		ProcessElements(codeModel.CodeElements);
 	} else {
 		WriteLine("using System;");
@@ -57,43 +59,6 @@
 		WriteLine("");
 	}
 
-	private FileCodeModel GetCodeModel(string filename)
-	{
-		var dte = (DTE)TransformationContext.Current.GetService(typeof(DTE));
-		ProjectItem projectItem = dte.Solution.FindProjectItem(filename);
-		return projectItem.FileCodeModel;
-	}
-
-	private void ProcessElements(CodeElements elements)
-	{
-		bool firstElement = true;
-		foreach (CodeElement element in elements)
-		{
-			CodeNamespace codeNamespace = element as CodeNamespace;
-			CodeClass codeClass = element as CodeClass;
-			if (codeNamespace != null) 
-			{
-				ProcessNamespace(codeNamespace, !firstElement);
-				firstElement = false;
-			} else if (codeClass != null)
-			{
-				ProcessClass(codeClass, !firstElement);
-				firstElement = false;
-			}
-		}
-	}
-
-	private void ProcessNamespace(CodeNamespace codeNamespace, bool emptyLineBefore)
-	{
-		if (emptyLineBefore) WriteLine("");
-		WriteLine("namespace " + codeNamespace.Name);
-		WriteLine("{");
-		PushIndent("\t");
-		ProcessElements(codeNamespace.Children);
-		PopIndent();
-		WriteLine("}");
-	}
-
 	private void ProcessClass(CodeClass codeClass, bool emptyLineBefore)
 	{
 		if (!IsPartialClass(codeClass)) return;
@@ -101,12 +66,14 @@
 		List<CodeInterface> interfaces = GetClassNotifyInterfaces(codeClass);
 		bool implementNotifyPropertyChanged = interfaces.Count > 0;
 
-		OutputClassHeader(codeClass, emptyLineBefore, implementNotifyPropertyChanged);
+		if (emptyLineBefore) WriteLine("");
+		OutputClassHeader(codeClass, implementNotifyPropertyChanged ? ": INotifyPropertyChanged, INotifyPropertyChanging" : "");
 
 		if (implementNotifyPropertyChanged)
 		{
 			List<CodeFunction> changeMethods = GetClassChangeMethodes(codeClass);
-			OutputClassProperties(codeClass, interfaces, changeMethods);
+			foreach (CodeInterface iface in interfaces)
+				OutputInterfaceProperties(iface, changeMethods);
 		}
 
 		bool firstElement = true;
@@ -126,77 +93,32 @@
 		OutputClassFooter(codeClass);
 	}
 
-	private bool IsPartialClass(CodeClass codeClass)
-	{
-		EnvDTE80.CodeClass2 codeClass2 = codeClass as EnvDTE80.CodeClass2;
-		return (codeClass2 != null) && (codeClass2.ClassKind == EnvDTE80.vsCMClassKind.vsCMClassKindPartialClass);
-	}
-
 	private List<CodeInterface> GetClassNotifyInterfaces(CodeClass codeClass)
 	{
-		List<CodeInterface> list = new List<CodeInterface>();
-		foreach (CodeInterface iface in codeClass.ImplementedInterfaces)
-		{
-            if (ClassHasAttributeForInterface(codeClass, iface.Name))
-				list.Add(iface);
-		}
-		return list;
+		return GetClassInterfaces(codeClass).Where(i => ClassHasAttributeForInterface(codeClass, i.Name)).ToList();
 	}
 
 	private bool ClassHasAttributeForInterface(CodeClass codeClass, string interfaceName)
 	{
 		string attrValue = "typeof(" + interfaceName + ")";
-		foreach (CodeAttribute codeAttribute in codeClass.Attributes)
-        {
-            if (codeAttribute.FullName == ImplementNotifyPropertyChangedAttributeFullName && codeAttribute.Value == attrValue) return true;
-        }
-		return false;
+		return GetClassAttributes(codeClass).Any(a => a.FullName == ImplementNotifyPropertyChangedAttributeFullName && a.Value == attrValue);
 	}
 
 	private List<CodeFunction> GetClassChangeMethodes(CodeClass codeClass)
 	{
-		List<CodeFunction> list = new List<CodeFunction>();
-		foreach (CodeElement element in codeClass.Members)
-		{
-			CodeFunction codeFunction = element as CodeFunction;
-			if (codeFunction != null && codeFunction.Name.StartsWith("On") && (codeFunction.Name.EndsWith("Changed") || codeFunction.Name.EndsWith("Changing")))
-			{
-				list.Add(codeFunction);
-			}
-		}
-		return list;
-	}
-
-	private void OutputClassHeader(CodeClass codeClass, bool emptyLineBefore, bool implementNotifyPropertyChanged)
-	{
-		if (emptyLineBefore) WriteLine("");
-		WriteLine("[System.CodeDom.Compiler.GeneratedCodeAttribute(\"ImplementNotifyPropertyChanged.tt\", \"\")]");
-		WriteLine("[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]");
-		if (implementNotifyPropertyChanged)
-			WriteLine("partial class " + codeClass.Name + ": INotifyPropertyChanged, INotifyPropertyChanging");
-		else
-			WriteLine("partial class " + codeClass.Name);
-		WriteLine("{");
-		PushIndent("\t");
-	}
-
-	private void OutputClassProperties(CodeClass codeClass, IEnumerable<CodeInterface> interfaces, List<CodeFunction> changeMethods)
-	{
-		foreach (CodeInterface iface in interfaces)
-            OutputInterfaceProperties(iface, changeMethods);
+		return GetClassFunctions(codeClass).Where(cf => cf.Name.StartsWith("On") && (cf.Name.EndsWith("Changed") || cf.Name.EndsWith("Changing"))).ToList();
 	}
 
 	private void OutputInterfaceProperties(CodeInterface codeInterface, List<CodeFunction> changeMethods)
 	{
-		foreach (CodeElement element in codeInterface.Members)
+		WriteLine("#region " + codeInterface.Name);
+		WriteLine("");
+		foreach (CodeProperty codeProperty in codeInterface.Members.OfType<CodeProperty>())
 		{
-			CodeProperty codeProperty = element as CodeProperty;
-			if (codeProperty != null)
-			{
-				OutputProperty(codeProperty, changeMethods, codeProperty.Setter == null);
-				WriteLine("");
-			}
+			OutputProperty(codeProperty, changeMethods, codeProperty.Setter == null);
+			WriteLine("");
 		}
+		WriteLine("#endregion");
 	}
 
 	private void OutputProperty(CodeProperty codeProperty, List<CodeFunction> changeMethods, bool setterPrivate)
@@ -215,13 +137,22 @@
 		if (setterPrivate)
 			changeCommand += "private ";
 		changeCommand += "set { ChangeProperty<" + propertyTypeName + ">(\"" + codeProperty.Name + "\", ref " + storeName + ", value";
-		foreach(CodeFunction codeFunction in changeMethods)
+		CodeFunction codeFunction = changeMethods.FirstOrDefault(cf => cf.Name == "On" + codeProperty.Name + "Changing");
+		if (codeFunction != null)
 		{
-			if (codeFunction.Name == "On" + codeProperty.Name + "Changing")
-				changeCommand += ", changingCallback: " + "On" + codeProperty.Name + "Changing";
-			else if (codeFunction.Name == "On" + codeProperty.Name + "Changed")
-				changeCommand += ", changedCallback: " + "On" + codeProperty.Name + "Changed";
-		}
+			if (codeFunction.Parameters.Count == 2)
+				changeCommand += ", changingCallback: " + codeFunction.Name;
+			else
+				changeCommand += ", changingCallback: " + "(o, n) => " + codeFunction.Name + "()";
+        }
+		codeFunction = changeMethods.FirstOrDefault(cf => cf.Name == "On" + codeProperty.Name + "Changed");
+		if (codeFunction != null)
+		{
+			if (codeFunction.Parameters.Count == 2)
+				changeCommand += ", changedCallback: " + codeFunction.Name;
+			else
+				changeCommand += ", changedCallback: " + "(o, n) => " + codeFunction.Name + "()";
+        }
 		changeCommand += "); }";
 		WriteLine(changeCommand);
 
@@ -305,22 +236,4 @@
 		WriteLine("#endregion");
 	}
 
-	private void OutputClassFooter(CodeClass codeClass)
-	{
-		PopIndent();
-		WriteLine("}");
-	}
-
-	private void DumpElements(CodeElements elements)
-	{
-		foreach (CodeElement element in elements)
-		{
-			string elDump = element.Kind.ToString();
-			if (element.Kind == vsCMElement.vsCMElementNamespace || element.Kind == vsCMElement.vsCMElementClass)
-				elDump += ": " + element.Name;
-			elDump += " -> " + element.Children.Count.ToString();
-			WriteLine(elDump);
-			DumpElements(element.Children);
-		}
-	}
 #>

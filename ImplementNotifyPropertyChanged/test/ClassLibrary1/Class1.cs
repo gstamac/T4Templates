@@ -28,6 +28,14 @@ namespace ClassLibrary1.Namespace1
     [ImplementNotifyPropertyChanged(typeof(IClass1Properties))]
     public partial class Class1 : IClass1Properties
     {
+        private void OnStringPropertyChanged()
+        {
+
+        }
+
+        private void OnIntPropertyChanged(int oldValue, int newValue)
+        {
+        }
     }
 
     namespace Namespace2

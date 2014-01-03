@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>T4ImplementNotifyPropertyChanged</id>
-        <version>0.7</version>
+        <version>0.8</version>
         <authors>gstamac</authors>
         <owners>Gregor Stamac</owners>
         <description>T4 template for generating partial class implementing INotifyPropertyChanging and INotifyPropertyChanged from interface.</description>
@@ -15,5 +15,6 @@
     </metadata>
     <files>
         <file src="src\ImplementNotifyPropertyChanged.tt" target="content\ImplementNotifyPropertyChanged.tt" />
+        <file src="..\_Common\CodeModelUtils.ttinclude" target="content\CodeModelUtils.ttinclude" />
     </files>
 </package>

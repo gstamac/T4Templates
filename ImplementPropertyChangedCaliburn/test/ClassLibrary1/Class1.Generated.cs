@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -6,20 +7,24 @@ using Caliburn.Micro;
 
 namespace ClassLibrary1.Namespace1
 {
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementPropertyChangedCaliburn.tt", "")]
+	[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 	partial class Class1: PropertyChangedBase
 	{
+		#region IClass1Properties
+
 		private System.String _StringProperty;
 		public System.String StringProperty
 		{
 			get { return _StringProperty; }
-			set { ChangeProperty<System.String>("StringProperty", ref _StringProperty, value); }
+			set { ChangeProperty<System.String>("StringProperty", ref _StringProperty, value, changedCallback: (o, n) => OnStringPropertyChanged()); }
 		}
 
 		private System.Int32 _IntProperty;
 		public System.Int32 IntProperty
 		{
 			get { return _IntProperty; }
-			set { ChangeProperty<System.Int32>("IntProperty", ref _IntProperty, value); }
+			set { ChangeProperty<System.Int32>("IntProperty", ref _IntProperty, value, changedCallback: OnIntPropertyChanged); }
 		}
 
 		private System.String _ReadOnlyStringProperty;
@@ -48,6 +53,7 @@ namespace ClassLibrary1.Namespace1
 			set { ChangeProperty<System.Int32>("WriteOnlyIntProperty", ref _WriteOnlyIntProperty, value); }
 		}
 
+		#endregion
 
 		#region INotifyPropertyChanged implementation
 		//ncrunch: no coverage start
@@ -72,8 +78,12 @@ namespace ClassLibrary1.Namespace1
 
 	namespace Namespace2
 	{
+		[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementPropertyChangedCaliburn.tt", "")]
+		[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 		partial class Class2: PropertyChangedBase
 		{
+			#region IClass2Properties
+
 			private System.String _StringProperty2;
 			public System.String StringProperty2
 			{
@@ -88,8 +98,13 @@ namespace ClassLibrary1.Namespace1
 				set { ChangeProperty<System.Int32>("IntProperty2", ref _IntProperty2, value); }
 			}
 
+			#endregion
+			[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementPropertyChangedCaliburn.tt", "")]
+			[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 			partial class InnerClass2: PropertyChangedBase
 			{
+				#region IClass1Properties
+
 				private System.String _StringProperty;
 				public System.String StringProperty
 				{
@@ -130,6 +145,9 @@ namespace ClassLibrary1.Namespace1
 					set { ChangeProperty<System.Int32>("WriteOnlyIntProperty", ref _WriteOnlyIntProperty, value); }
 				}
 
+				#endregion
+				#region IClass2Properties
+
 				private System.String _StringProperty2;
 				public System.String StringProperty2
 				{
@@ -144,6 +162,7 @@ namespace ClassLibrary1.Namespace1
 					set { ChangeProperty<System.Int32>("IntProperty2", ref _IntProperty2, value); }
 				}
 
+				#endregion
 
 				#region INotifyPropertyChanged implementation
 				//ncrunch: no coverage start
@@ -166,8 +185,12 @@ namespace ClassLibrary1.Namespace1
 				#endregion
 			}
 
+			[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementPropertyChangedCaliburn.tt", "")]
+			[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 			partial class InnerClass3: PropertyChangedBase
 			{
+				#region IClass2Properties
+
 				private System.String _StringProperty2;
 				public System.String StringProperty2
 				{
@@ -182,6 +205,7 @@ namespace ClassLibrary1.Namespace1
 					set { ChangeProperty<System.Int32>("IntProperty2", ref _IntProperty2, value); }
 				}
 
+				#endregion
 
 				#region INotifyPropertyChanged implementation
 				//ncrunch: no coverage start
@@ -204,6 +228,8 @@ namespace ClassLibrary1.Namespace1
 				#endregion
 			}
 
+			[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementPropertyChangedCaliburn.tt", "")]
+			[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 			partial class InnerClass4
 			{
 			}
