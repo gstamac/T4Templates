@@ -13,5 +13,15 @@ namespace TemplateAttributes
 		}
 		public Type Interface { get; private set; }
 	}
+
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal class ImplementAttachedDependencyPropertiesAttribute : Attribute
+	{
+		public ImplementAttachedDependencyPropertiesAttribute(Type aInterface)
+		{
+			Interface = aInterface;
+		}
+		public Type Interface { get; private set; }
+	}
 }
 //ncrunch: no coverage end

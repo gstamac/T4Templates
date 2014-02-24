@@ -59,17 +59,20 @@ namespace ClassLibrary1.Namespace1
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		public event PropertyChangingEventHandler PropertyChanging;
+		[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 		protected virtual void RaisePropertyChanged(string propertyName)
 		{
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
+		[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 		protected virtual void RaisePropertyChanging(string propertyName)
 		{
 			if (PropertyChanging != null)
 				PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
 		}
 
+		[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 		protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changingCallback = null, Action<T, T> changedCallback = null)
 		{
 			if ((propertyValue == null && newValue == null) || (propertyValue != null && propertyValue.Equals(newValue))) return;
@@ -81,6 +84,7 @@ namespace ClassLibrary1.Namespace1
 			if (changedCallback != null) changedCallback(oldValue, newValue);
 		}
 
+		[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 		public string GetPropertyName<TProperty>(Expression<Func<ClassLibrary1.Namespace1.Class1, TProperty>> propertySelector)
 		{
 			var memberExpression = propertySelector.Body as MemberExpression;
@@ -196,17 +200,20 @@ namespace ClassLibrary1.Namespace1
 
 				public event PropertyChangedEventHandler PropertyChanged;
 				public event PropertyChangingEventHandler PropertyChanging;
+				[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 				protected virtual void RaisePropertyChanged(string propertyName)
 				{
 					if (PropertyChanged != null)
 						PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 				}
+				[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 				protected virtual void RaisePropertyChanging(string propertyName)
 				{
 					if (PropertyChanging != null)
 						PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
 				}
 
+				[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 				protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changingCallback = null, Action<T, T> changedCallback = null)
 				{
 					if ((propertyValue == null && newValue == null) || (propertyValue != null && propertyValue.Equals(newValue))) return;
@@ -218,6 +225,7 @@ namespace ClassLibrary1.Namespace1
 					if (changedCallback != null) changedCallback(oldValue, newValue);
 				}
 
+				[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 				public string GetPropertyName<TProperty>(Expression<Func<ClassLibrary1.Namespace1.Namespace2.Class2.InnerClass2, TProperty>> propertySelector)
 				{
 					var memberExpression = propertySelector.Body as MemberExpression;
@@ -267,17 +275,20 @@ namespace ClassLibrary1.Namespace1
 
 				public event PropertyChangedEventHandler PropertyChanged;
 				public event PropertyChangingEventHandler PropertyChanging;
+				[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 				protected virtual void RaisePropertyChanged(string propertyName)
 				{
 					if (PropertyChanged != null)
 						PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 				}
+				[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 				protected virtual void RaisePropertyChanging(string propertyName)
 				{
 					if (PropertyChanging != null)
 						PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
 				}
 
+				[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 				protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changingCallback = null, Action<T, T> changedCallback = null)
 				{
 					if ((propertyValue == null && newValue == null) || (propertyValue != null && propertyValue.Equals(newValue))) return;
@@ -289,6 +300,7 @@ namespace ClassLibrary1.Namespace1
 					if (changedCallback != null) changedCallback(oldValue, newValue);
 				}
 
+				[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 				public string GetPropertyName<TProperty>(Expression<Func<ClassLibrary1.Namespace1.Namespace2.Class2.InnerClass3, TProperty>> propertySelector)
 				{
 					var memberExpression = propertySelector.Body as MemberExpression;
@@ -322,17 +334,20 @@ namespace ClassLibrary1.Namespace1
 
 			public event PropertyChangedEventHandler PropertyChanged;
 			public event PropertyChangingEventHandler PropertyChanging;
+			[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 			protected virtual void RaisePropertyChanged(string propertyName)
 			{
 				if (PropertyChanged != null)
 					PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+			[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 			protected virtual void RaisePropertyChanging(string propertyName)
 			{
 				if (PropertyChanging != null)
 					PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
 			}
 
+			[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 			protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changingCallback = null, Action<T, T> changedCallback = null)
 			{
 				if ((propertyValue == null && newValue == null) || (propertyValue != null && propertyValue.Equals(newValue))) return;
@@ -344,6 +359,7 @@ namespace ClassLibrary1.Namespace1
 				if (changedCallback != null) changedCallback(oldValue, newValue);
 			}
 
+			[System.Diagnostics.DebuggerNonUserCode()] // ignore in test coverage
 			public string GetPropertyName<TProperty>(Expression<Func<ClassLibrary1.Namespace1.Namespace2.Class2, TProperty>> propertySelector)
 			{
 				var memberExpression = propertySelector.Body as MemberExpression;

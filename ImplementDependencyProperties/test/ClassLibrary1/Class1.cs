@@ -28,22 +28,32 @@ namespace ClassLibrary1.Namespace1
     }
 
     [ImplementDependencyProperties(typeof(IClass1Properties))]
+    [ImplementAttachedDependencyProperties(typeof(IInternalClassProperties))]
     public partial class Class1 : DependencyObject, IClass1Properties
     {
-        public static void OnStringPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private interface IInternalClassProperties
         {
-            
+            string StringProperty2 { get; set; }
+            int IntProperty2 { get; set; }
         }
 
-        private void OnIntPropertyChanged()
-        {
+        private static string StringProperty_DEFAULT_VALUE = "";
 
-        }
+        public static void OnStringPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { }
 
-        private void OnFloatPropertyChanged(float oldValue, float newValue)
-        {
+        private const int IntProperty_DEFAULT_VALUE = 190;
+        private const FrameworkPropertyMetadataOptions IntProperty_OPTIONS = FrameworkPropertyMetadataOptions.BindsTwoWayByDefault;
 
-        }
+        private void OnIntPropertyChanged() { }
+
+        private const FrameworkPropertyMetadataOptions FloatProperty_OPTIONS = FrameworkPropertyMetadataOptions.BindsTwoWayByDefault;
+
+        private void OnFloatPropertyChanged(float oldValue, float newValue) { }
+
+        private static string StringProperty2_DEFAULT_VALUE = "";
+
+        public static void OnStringProperty2Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) { }
+
     }
 
     namespace Namespace2

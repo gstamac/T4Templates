@@ -77,6 +77,9 @@
       <UserProperties Class1_cs_UseParentNamespace="False" Template2_tt_UseParentNamespace="False" Template2_ttinclude_UseParentNamespace="False" />
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PreBuildEvent>xcopy /y $(SolutionDir)..\..\..\_Common\. $(SolutionDir)..\..\src\</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

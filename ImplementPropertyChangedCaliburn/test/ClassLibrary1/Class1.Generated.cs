@@ -58,6 +58,7 @@ namespace ClassLibrary1.Namespace1
 		#region INotifyPropertyChanged implementation
 		//ncrunch: no coverage start
 
+		[System.Diagnostics.DebuggerNonUserCode()]
 		protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changedCallback = null)
 		{
 			if ((propertyValue == null && newValue == null) || (propertyValue != null && propertyValue.Equals(newValue))) return;
@@ -67,6 +68,7 @@ namespace ClassLibrary1.Namespace1
 			if (changedCallback != null) changedCallback(oldValue, newValue);
 		}
 
+		[System.Diagnostics.DebuggerNonUserCode()]
 		public string GetPropertyName<TProperty>(Expression<Func<ClassLibrary1.Namespace1.Class1, TProperty>> propertySelector)
 		{
 			return propertySelector.GetMemberInfo().Name;
@@ -167,6 +169,7 @@ namespace ClassLibrary1.Namespace1
 				#region INotifyPropertyChanged implementation
 				//ncrunch: no coverage start
 
+				[System.Diagnostics.DebuggerNonUserCode()]
 				protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changedCallback = null)
 				{
 					if ((propertyValue == null && newValue == null) || (propertyValue != null && propertyValue.Equals(newValue))) return;
@@ -176,6 +179,7 @@ namespace ClassLibrary1.Namespace1
 					if (changedCallback != null) changedCallback(oldValue, newValue);
 				}
 
+				[System.Diagnostics.DebuggerNonUserCode()]
 				public string GetPropertyName<TProperty>(Expression<Func<ClassLibrary1.Namespace1.Namespace2.Class2.InnerClass2, TProperty>> propertySelector)
 				{
 					return propertySelector.GetMemberInfo().Name;
@@ -210,6 +214,7 @@ namespace ClassLibrary1.Namespace1
 				#region INotifyPropertyChanged implementation
 				//ncrunch: no coverage start
 
+				[System.Diagnostics.DebuggerNonUserCode()]
 				protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changedCallback = null)
 				{
 					if ((propertyValue == null && newValue == null) || (propertyValue != null && propertyValue.Equals(newValue))) return;
@@ -219,6 +224,7 @@ namespace ClassLibrary1.Namespace1
 					if (changedCallback != null) changedCallback(oldValue, newValue);
 				}
 
+				[System.Diagnostics.DebuggerNonUserCode()]
 				public string GetPropertyName<TProperty>(Expression<Func<ClassLibrary1.Namespace1.Namespace2.Class2.InnerClass3, TProperty>> propertySelector)
 				{
 					return propertySelector.GetMemberInfo().Name;
@@ -237,6 +243,7 @@ namespace ClassLibrary1.Namespace1
 			#region INotifyPropertyChanged implementation
 			//ncrunch: no coverage start
 
+			[System.Diagnostics.DebuggerNonUserCode()]
 			protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changedCallback = null)
 			{
 				if ((propertyValue == null && newValue == null) || (propertyValue != null && propertyValue.Equals(newValue))) return;
@@ -246,6 +253,7 @@ namespace ClassLibrary1.Namespace1
 				if (changedCallback != null) changedCallback(oldValue, newValue);
 			}
 
+			[System.Diagnostics.DebuggerNonUserCode()]
 			public string GetPropertyName<TProperty>(Expression<Func<ClassLibrary1.Namespace1.Namespace2.Class2, TProperty>> propertySelector)
 			{
 				return propertySelector.GetMemberInfo().Name;

@@ -15,7 +15,7 @@ namespace ClassLibrary1.Namespace1
 
 		public static readonly DependencyProperty StringPropertyProperty = 
 			DependencyProperty.Register("StringProperty", typeof(System.String), typeof(Class1),
-			new PropertyMetadata(default(System.String), OnStringPropertyChanged));
+			new PropertyMetadata(StringProperty_DEFAULT_VALUE, OnStringPropertyChanged));
 
 		public System.String StringProperty
 		{
@@ -25,7 +25,7 @@ namespace ClassLibrary1.Namespace1
 
 		public static readonly DependencyProperty IntPropertyProperty = 
 			DependencyProperty.Register("IntProperty", typeof(System.Int32), typeof(Class1),
-			new PropertyMetadata(default(System.Int32), (d, e) => ((Class1)d).OnIntPropertyChanged()));
+			new FrameworkPropertyMetadata(IntProperty_DEFAULT_VALUE, IntProperty_OPTIONS, (d, e) => ((Class1)d).OnIntPropertyChanged()));
 
 		public System.Int32 IntProperty
 		{
@@ -35,7 +35,7 @@ namespace ClassLibrary1.Namespace1
 
 		public static readonly DependencyProperty FloatPropertyProperty = 
 			DependencyProperty.Register("FloatProperty", typeof(System.Single), typeof(Class1),
-			new PropertyMetadata(default(System.Single), (d, e) => ((Class1)d).OnFloatPropertyChanged((System.Single)e.OldValue, (System.Single)e.NewValue)));
+			new FrameworkPropertyMetadata(default(System.Single), FloatProperty_OPTIONS, (d, e) => ((Class1)d).OnFloatPropertyChanged((System.Single)e.OldValue, (System.Single)e.NewValue)));
 
 		public System.Single FloatProperty
 		{
@@ -45,7 +45,7 @@ namespace ClassLibrary1.Namespace1
 
 		public static readonly DependencyProperty ReadOnlyStringPropertyProperty = 
 			DependencyProperty.Register("ReadOnlyStringProperty", typeof(System.String), typeof(Class1),
-			new PropertyMetadata(default(System.String)));
+			new PropertyMetadata());
 
 		public System.String ReadOnlyStringProperty
 		{
@@ -55,7 +55,7 @@ namespace ClassLibrary1.Namespace1
 
 		public static readonly DependencyProperty ReadOnlyIntPropertyProperty = 
 			DependencyProperty.Register("ReadOnlyIntProperty", typeof(System.Int32), typeof(Class1),
-			new PropertyMetadata(default(System.Int32)));
+			new PropertyMetadata());
 
 		public System.Int32 ReadOnlyIntProperty
 		{
@@ -65,7 +65,7 @@ namespace ClassLibrary1.Namespace1
 
 		public static readonly DependencyProperty WriteOnlyStringPropertyProperty = 
 			DependencyProperty.Register("WriteOnlyStringProperty", typeof(System.String), typeof(Class1),
-			new PropertyMetadata(default(System.String)));
+			new PropertyMetadata());
 
 		public System.String WriteOnlyStringProperty
 		{
@@ -74,12 +74,45 @@ namespace ClassLibrary1.Namespace1
 
 		public static readonly DependencyProperty WriteOnlyIntPropertyProperty = 
 			DependencyProperty.Register("WriteOnlyIntProperty", typeof(System.Int32), typeof(Class1),
-			new PropertyMetadata(default(System.Int32)));
+			new PropertyMetadata());
 
 		public System.Int32 WriteOnlyIntProperty
 		{
 			set { SetValue(WriteOnlyIntPropertyProperty, value); }
 		}
+
+		#endregion
+		#region IInternalClassProperties
+
+		public static readonly DependencyProperty StringProperty2Property = 
+			DependencyProperty.RegisterAttached("StringProperty2", typeof(System.String), typeof(Class1),
+			new PropertyMetadata(StringProperty2_DEFAULT_VALUE, OnStringProperty2Changed));
+
+		public static System.String GetStringProperty2(DependencyObject obj)
+		{
+			return (System.String)obj.GetValue(StringProperty2Property);
+		}
+
+		public static void SetStringProperty2(DependencyObject obj, System.String value)
+		{
+			obj.SetValue(StringProperty2Property, value);
+		}
+
+
+		public static readonly DependencyProperty IntProperty2Property = 
+			DependencyProperty.RegisterAttached("IntProperty2", typeof(System.Int32), typeof(Class1),
+			new PropertyMetadata());
+
+		public static System.Int32 GetIntProperty2(DependencyObject obj)
+		{
+			return (System.Int32)obj.GetValue(IntProperty2Property);
+		}
+
+		public static void SetIntProperty2(DependencyObject obj, System.Int32 value)
+		{
+			obj.SetValue(IntProperty2Property, value);
+		}
+
 
 		#endregion
 	}
@@ -94,7 +127,7 @@ namespace ClassLibrary1.Namespace1
 
 			public static readonly DependencyProperty StringProperty2Property = 
 				DependencyProperty.Register("StringProperty2", typeof(System.String), typeof(Class2),
-				new PropertyMetadata(default(System.String)));
+				new PropertyMetadata());
 
 			public System.String StringProperty2
 			{
@@ -104,7 +137,7 @@ namespace ClassLibrary1.Namespace1
 
 			public static readonly DependencyProperty IntProperty2Property = 
 				DependencyProperty.Register("IntProperty2", typeof(System.Int32), typeof(Class2),
-				new PropertyMetadata(default(System.Int32)));
+				new PropertyMetadata());
 
 			public System.Int32 IntProperty2
 			{
@@ -121,7 +154,7 @@ namespace ClassLibrary1.Namespace1
 
 				public static readonly DependencyProperty StringPropertyProperty = 
 					DependencyProperty.Register("StringProperty", typeof(System.String), typeof(InnerClass2),
-					new PropertyMetadata(default(System.String)));
+					new PropertyMetadata());
 
 				public System.String StringProperty
 				{
@@ -131,7 +164,7 @@ namespace ClassLibrary1.Namespace1
 
 				public static readonly DependencyProperty IntPropertyProperty = 
 					DependencyProperty.Register("IntProperty", typeof(System.Int32), typeof(InnerClass2),
-					new PropertyMetadata(default(System.Int32)));
+					new PropertyMetadata());
 
 				public System.Int32 IntProperty
 				{
@@ -141,7 +174,7 @@ namespace ClassLibrary1.Namespace1
 
 				public static readonly DependencyProperty FloatPropertyProperty = 
 					DependencyProperty.Register("FloatProperty", typeof(System.Single), typeof(InnerClass2),
-					new PropertyMetadata(default(System.Single)));
+					new PropertyMetadata());
 
 				public System.Single FloatProperty
 				{
@@ -151,7 +184,7 @@ namespace ClassLibrary1.Namespace1
 
 				public static readonly DependencyProperty ReadOnlyStringPropertyProperty = 
 					DependencyProperty.Register("ReadOnlyStringProperty", typeof(System.String), typeof(InnerClass2),
-					new PropertyMetadata(default(System.String)));
+					new PropertyMetadata());
 
 				public System.String ReadOnlyStringProperty
 				{
@@ -161,7 +194,7 @@ namespace ClassLibrary1.Namespace1
 
 				public static readonly DependencyProperty ReadOnlyIntPropertyProperty = 
 					DependencyProperty.Register("ReadOnlyIntProperty", typeof(System.Int32), typeof(InnerClass2),
-					new PropertyMetadata(default(System.Int32)));
+					new PropertyMetadata());
 
 				public System.Int32 ReadOnlyIntProperty
 				{
@@ -171,7 +204,7 @@ namespace ClassLibrary1.Namespace1
 
 				public static readonly DependencyProperty WriteOnlyStringPropertyProperty = 
 					DependencyProperty.Register("WriteOnlyStringProperty", typeof(System.String), typeof(InnerClass2),
-					new PropertyMetadata(default(System.String)));
+					new PropertyMetadata());
 
 				public System.String WriteOnlyStringProperty
 				{
@@ -180,7 +213,7 @@ namespace ClassLibrary1.Namespace1
 
 				public static readonly DependencyProperty WriteOnlyIntPropertyProperty = 
 					DependencyProperty.Register("WriteOnlyIntProperty", typeof(System.Int32), typeof(InnerClass2),
-					new PropertyMetadata(default(System.Int32)));
+					new PropertyMetadata());
 
 				public System.Int32 WriteOnlyIntProperty
 				{
@@ -192,7 +225,7 @@ namespace ClassLibrary1.Namespace1
 
 				public static readonly DependencyProperty StringProperty2Property = 
 					DependencyProperty.Register("StringProperty2", typeof(System.String), typeof(InnerClass2),
-					new PropertyMetadata(default(System.String)));
+					new PropertyMetadata());
 
 				public System.String StringProperty2
 				{
@@ -202,7 +235,7 @@ namespace ClassLibrary1.Namespace1
 
 				public static readonly DependencyProperty IntProperty2Property = 
 					DependencyProperty.Register("IntProperty2", typeof(System.Int32), typeof(InnerClass2),
-					new PropertyMetadata(default(System.Int32)));
+					new PropertyMetadata());
 
 				public System.Int32 IntProperty2
 				{
@@ -221,7 +254,7 @@ namespace ClassLibrary1.Namespace1
 
 				public static readonly DependencyProperty StringProperty2Property = 
 					DependencyProperty.Register("StringProperty2", typeof(System.String), typeof(InnerClass3),
-					new PropertyMetadata(default(System.String)));
+					new PropertyMetadata());
 
 				public System.String StringProperty2
 				{
@@ -231,7 +264,7 @@ namespace ClassLibrary1.Namespace1
 
 				public static readonly DependencyProperty IntProperty2Property = 
 					DependencyProperty.Register("IntProperty2", typeof(System.Int32), typeof(InnerClass3),
-					new PropertyMetadata(default(System.Int32)));
+					new PropertyMetadata());
 
 				public System.Int32 IntProperty2
 				{

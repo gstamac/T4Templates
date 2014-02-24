@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -10,6 +11,8 @@ namespace ClassLibrary1
 	[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 	partial class Class2Parent: PropertyChangedBase
 	{
+		#region IClass2Parent
+
 		private System.String _ParentProperty;
 		public System.String ParentProperty
 		{
@@ -17,6 +20,7 @@ namespace ClassLibrary1
 			set { ChangeProperty<System.String>("ParentProperty", ref _ParentProperty, value); }
 		}
 
+		#endregion
 
 		#region INotifyPropertyChanged implementation
 		//ncrunch: no coverage start
@@ -43,6 +47,8 @@ namespace ClassLibrary1
 	[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 	partial class Class2Child
 	{
+		#region IClass2Child
+
 		private System.String _ChildProperty;
 		public System.String ChildProperty
 		{
@@ -50,12 +56,15 @@ namespace ClassLibrary1
 			set { ChangeProperty<System.String>("ChildProperty", ref _ChildProperty, value); }
 		}
 
+		#endregion
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("ImplementPropertyChangedCaliburn.tt", "")]
 	[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 	partial class Class2ChildsChild
 	{
+		#region IClass2ChildsChild
+
 		private System.String _ChildsChildProperty;
 		public System.String ChildsChildProperty
 		{
@@ -63,5 +72,6 @@ namespace ClassLibrary1
 			set { ChangeProperty<System.String>("ChildsChildProperty", ref _ChildsChildProperty, value); }
 		}
 
+		#endregion
 	}
 }

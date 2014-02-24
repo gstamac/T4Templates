@@ -30,6 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,6 +57,15 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Class1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Class2.cs">
+      <Template>..\..\src\ImplementDependencyProperties.tt</Template>
+      <Generator>T4Toolbox.TemplatedFileGenerator</Generator>
+      <LastGenOutput>Class2.Generated.cs</LastGenOutput>
+    </Compile>
+    <Compile Include="Class2.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Class2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -74,9 +85,12 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Class1_cs_UseParentNamespace="False" />
+      <UserProperties Class2_cs_UseParentNamespace="False" Class1_cs_UseParentNamespace="False" />
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PreBuildEvent>xcopy /y $(SolutionDir)..\..\..\_Common\. $(SolutionDir)..\..\src\</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

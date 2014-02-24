@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>T4ImplementPropertyChangedCaliburn</id>
-        <version>0.9</version>
+        <version>1.2</version>
         <authors>gstamac</authors>
         <owners>Gregor Stamac</owners>
         <description>T4 template for generating partial class implementing INotifyPropertyChanged from interface using Caliburn.Micro.PropertyChangedBase.</description>
@@ -14,7 +14,7 @@
         <tags>T4 T4Toolbox INotifyPropertyChanging INotifyPropertyChanged MVVM view model Caliburn.Micro.PropertyChangedBase</tags>
     </metadata>
     <files>
-        <file src="src\ImplementPropertyChangedCaliburn.tt" target="content\ImplementPropertyChangedCaliburn.tt" />
-        <file src="..\_Common\CodeModelUtils.ttinclude" target="content\CodeModelUtils.ttinclude" />
+        <file src="src\ImplementPropertyChangedCaliburn.tt" target="content\T4Templates\ImplementPropertyChangedCaliburn\ImplementPropertyChangedCaliburn.tt" />
+        <file src="..\_Common\CodeModelUtils.ttinclude" target="content\T4Templates\ImplementPropertyChangedCaliburn\CodeModelUtils.ttinclude" />
     </files>
 </package>

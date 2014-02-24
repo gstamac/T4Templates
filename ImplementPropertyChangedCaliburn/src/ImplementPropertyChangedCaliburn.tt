@@ -6,20 +6,18 @@
 <#@ import namespace="EnvDTE" #>
 <#@ assembly name="EnvDTE80" #>
 <#@ include file="T4Toolbox.tt" #>
-<#@ include file="..\..\_Common\CodeModelUtils.ttinclude" #>
+<#@ include file="CodeModelUtils.ttinclude" #>
 <#@ output extension=".Generated.cs" #>
 <#
 	if (Session.ContainsKey("InputFileName"))
 	{
 		FileCodeModel codeModel = GetCodeModel(Session["InputFileName"] as string);
 
-		//WriteLine("/*");
-		//DumpElements(codeModel.CodeElements);
-		//WriteLine("*/");
+		//WriteLine("/*"); DumpElements(codeModel.CodeElements); WriteLine("*/");
 
 		OutputUsings();
 
-		ProcessElements(codeModel.CodeElements);
+		ProcessElements(codeModel, codeModel.CodeElements);
 	} else {
 		WriteLine("using System;");
 		WriteLine("");
@@ -61,11 +59,11 @@
 		WriteLine("");
 	}
 
-	private void ProcessClass(CodeClass codeClass, bool emptyLineBefore)
+	private void ProcessClass(FileCodeModel codeModel, CodeClass codeClass, bool emptyLineBefore)
 	{
 		if (!IsPartialClass(codeClass)) return;
 
-		List<CodeInterface> interfaces = GetClassNotifyInterfaces(codeClass);
+		List<CodeInterface> interfaces = GetInterfacesToImplement(codeModel, codeClass, ImplementPropertyChangedCaliburnAttributeFullName);
 		bool needsPropertyChangedBase = NeedsPropertyChangedBase(codeClass, interfaces);
 
 		if (emptyLineBefore) WriteLine("");
@@ -73,7 +71,7 @@
 
 		if (interfaces.Count > 0)
 		{
-			List<CodeFunction> changeMethods = GetClassChangeMethodes(codeClass);
+			List<CodeFunction> changeMethods = GetClassChangeMethods(codeClass);
 			foreach (CodeInterface iface in interfaces)
 				OutputInterfaceProperties(iface, changeMethods);
 		}
@@ -84,7 +82,7 @@
 			CodeClass innerCodeClass = element as CodeClass;
 			if (innerCodeClass != null)
 			{
-				ProcessClass(innerCodeClass, !firstElement);
+				ProcessClass(codeModel, innerCodeClass, !firstElement);
 				firstElement = false;
 			}
 		}
@@ -93,11 +91,6 @@
 			OutputClassNotifyPropertyChangedImplementation(codeClass);
 
 		OutputClassFooter(codeClass);
-	}
-
-	private List<CodeInterface> GetClassNotifyInterfaces(CodeClass codeClass)
-	{
-		return GetClassInterfaces(codeClass).Where(i => ClassHasAttributeForInterface(codeClass, i.Name)).ToList();
 	}
 
 	private bool NeedsPropertyChangedBase(CodeClass codeClass, List<CodeInterface> interfaces)
@@ -110,13 +103,7 @@
 		return GetClassBases(codeClass).Any(cc => cc.FullName == "Caliburn.Micro.PropertyChangedBase" || InheritsPropertyChangedBase(cc));
 	}
 
-	private bool ClassHasAttributeForInterface(CodeClass codeClass, string interfaceName)
-	{
-		string attrValue = "typeof(" + interfaceName + ")";
-		return GetClassAttributes(codeClass).Any(a => a.FullName == ImplementPropertyChangedCaliburnAttributeFullName && a.Value == attrValue);
-	}
-
-	private List<CodeFunction> GetClassChangeMethodes(CodeClass codeClass)
+	private List<CodeFunction> GetClassChangeMethods(CodeClass codeClass)
 	{
 		return GetClassFunctions(codeClass).Where(cf => cf.Name.StartsWith("On") && cf.Name.EndsWith("Changed")).ToList();
 	}
@@ -170,6 +157,7 @@
 		WriteLine("#region INotifyPropertyChanged implementation");
 		WriteLine("//ncrunch: no coverage start");
 		WriteLine("");
+		WriteLine("[System.Diagnostics.DebuggerNonUserCode()]");
 		WriteLine("protected virtual void ChangeProperty<T>(string propertyName, ref T propertyValue, T newValue, Action<T, T> changedCallback = null)");
 		WriteLine("{");
 		PushIndent("\t");
@@ -182,6 +170,7 @@
 		WriteLine("}");
 		WriteLine("");
 
+		WriteLine("[System.Diagnostics.DebuggerNonUserCode()]");
         WriteLine("public string GetPropertyName<TProperty>(Expression<Func<" + codeClass.FullName + ", TProperty>> propertySelector)");
         WriteLine("{");
 		PushIndent("\t");
